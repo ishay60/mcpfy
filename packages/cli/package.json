@@ -1,0 +1,39 @@
+{
+  "name": "@mcpfy/cli",
+  "version": "0.0.1",
+  "description": "mcpfy command-line interface. Initializes config, serves the MCP server (stdio or HTTP), and validates connectivity.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mcpfy": "./dist/bin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && chmod +x dist/bin.js",
+    "dev": "tsc -p tsconfig.json --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "@mcpfy/config": "workspace:^",
+    "@mcpfy/connector-sql": "workspace:^",
+    "@mcpfy/core": "workspace:^",
+    "@mcpfy/security": "workspace:^",
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.0",
+    "tsx": "^4.19.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

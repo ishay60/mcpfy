@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mcpfy": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpfy/cli",
+        "serve",
+        "--config",
+        "/abs/path/to/examples/sqlite/mcpfy.config.ts"
+      ]
+    }
+  }
+}

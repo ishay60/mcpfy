@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcpfy": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpfy/cli",
+        "serve",
+        "--config",
+        "/abs/path/to/examples/postgres/mcpfy.config.ts"
+      ],
+      "env": {
+        "DATABASE_URL": "postgres://user:pass@localhost:5432/mydb"
+      }
+    }
+  }
+}

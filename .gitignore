@@ -1,0 +1,29 @@
+node_modules
+dist
+.turbo
+coverage
+.tsbuildinfo
+*.tsbuildinfo
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode
+.idea
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Local mcpfy state
+.mcpfy/
+audit.log

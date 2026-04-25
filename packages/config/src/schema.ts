@@ -1,0 +1,179 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { extname, isAbsolute, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { parse as parseYaml } from 'yaml';
+import { z } from 'zod';
+import { ConfigError } from '@mcpfy/core';
+
+const ScopeSchema = z.enum(['schema:read', 'tables:read', 'tables:write', 'query:raw', 'http:call']);
+
+const PerEntitySchema = z
+  .object({
+    enabled: z.boolean().default(false),
+    include: z.array(z.string()).optional(),
+    exclude: z.array(z.string()).optional(),
+  })
+  .default({ enabled: false });
+
+const RedactSchema = z
+  .object({
+    columns: z.array(z.string()).default([]),
+    patterns: z
+      .array(
+        z.object({
+          name: z.string(),
+          regex: z.string(),
+          replacement: z.string().optional(),
+        }),
+      )
+      .default([]),
+  })
+  .default({ columns: [], patterns: [] });
+
+const LimitsSchema = z
+  .object({
+    rowCap: z.number().int().positive().max(10_000).default(200),
+    timeoutMs: z.number().int().positive().max(60_000).default(10_000),
+    maxBytes: z.number().int().positive().max(8 * 1024 * 1024).default(256 * 1024),
+  })
+  .default({ rowCap: 200, timeoutMs: 10_000, maxBytes: 256 * 1024 });
+
+const SqlSourceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9._-]+$/i),
+  kind: z.enum(['postgres', 'mysql', 'mariadb', 'sqlite']),
+  url: z.string().min(1),
+  scopes: z.array(ScopeSchema).default(['schema:read', 'tables:read']),
+  perEntityTools: PerEntitySchema,
+  limits: LimitsSchema,
+  redact: RedactSchema,
+});
+
+const MongoSourceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9._-]+$/i),
+  kind: z.literal('mongo'),
+  url: z.string().min(1),
+  database: z.string().optional(),
+  scopes: z.array(ScopeSchema).default(['schema:read', 'tables:read']),
+  limits: LimitsSchema,
+  redact: RedactSchema,
+});
+
+const OpenApiSourceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9._-]+$/i),
+  kind: z.literal('openapi'),
+  spec: z.string(),
+  baseUrl: z.string().url(),
+  auth: z
+    .union([
+      z.object({ type: z.literal('none') }),
+      z.object({ type: z.literal('bearer'), token: z.string() }),
+      z.object({ type: z.literal('apiKey'), header: z.string(), value: z.string() }),
+      z.object({ type: z.literal('basic'), username: z.string(), password: z.string() }),
+    ])
+    .default({ type: 'none' }),
+  allowMethods: z.array(z.enum(['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'])).default(['GET', 'HEAD', 'OPTIONS']),
+  scopes: z.array(ScopeSchema).default(['http:call']),
+  limits: LimitsSchema,
+  redact: RedactSchema,
+});
+
+const TransportSchema = z.union([
+  z.object({ kind: z.literal('stdio') }),
+  z.object({
+    kind: z.literal('http'),
+    host: z.string().default('127.0.0.1'),
+    port: z.number().int().min(1).max(65535).default(7337),
+    auth: z
+      .union([
+        z.object({ type: z.literal('bearer'), token: z.string().optional() }),
+        z.object({
+          type: z.literal('oauth'),
+          issuer: z.string().url(),
+          audience: z.string(),
+          jwksUri: z.string().url().optional(),
+        }),
+      ])
+      .default({ type: 'bearer' }),
+  }),
+]);
+
+export const ConfigSchema = z.object({
+  server: z
+    .object({
+      name: z.string().default('mcpfy'),
+      version: z.string().default('0.0.1'),
+    })
+    .default({ name: 'mcpfy', version: '0.0.1' }),
+  transport: TransportSchema.default({ kind: 'stdio' }),
+  sources: z.array(z.union([SqlSourceSchema, MongoSourceSchema, OpenApiSourceSchema])).min(1),
+  audit: z
+    .object({ path: z.string().default('~/.mcpfy/audit.log') })
+    .default({ path: '~/.mcpfy/audit.log' }),
+  rateLimit: z
+    .object({
+      defaultPerMinute: z.number().int().positive().default(30),
+      maxConcurrent: z.number().int().positive().default(5),
+    })
+    .default({ defaultPerMinute: 30, maxConcurrent: 5 }),
+  security: z
+    .object({
+      wrapMode: z.enum(['strict', 'minimal', 'off']).default('strict'),
+    })
+    .default({ wrapMode: 'strict' }),
+});
+
+export type McpfyConfig = z.infer<typeof ConfigSchema>;
+export type SqlSourceConfig = z.infer<typeof SqlSourceSchema>;
+export type MongoSourceConfig = z.infer<typeof MongoSourceSchema>;
+export type OpenApiSourceConfig = z.infer<typeof OpenApiSourceSchema>;
+export type SourceConfig = SqlSourceConfig | MongoSourceConfig | OpenApiSourceConfig;
+export type TransportConfig = z.infer<typeof TransportSchema>;
+
+/** Identity helper for type-safe config files (`mcpfy.config.ts`). */
+export function defineConfig(cfg: McpfyConfig | (() => McpfyConfig)): McpfyConfig {
+  return typeof cfg === 'function' ? cfg() : cfg;
+}
+
+export async function loadConfig(path: string): Promise<McpfyConfig> {
+  const abs = isAbsolute(path) ? path : resolve(process.cwd(), path);
+  if (!existsSync(abs)) {
+    throw new ConfigError(`Config file not found: ${abs}`);
+  }
+
+  const ext = extname(abs).toLowerCase();
+  let raw: unknown;
+
+  switch (ext) {
+    case '.json':
+      raw = JSON.parse(readFileSync(abs, 'utf8'));
+      break;
+    case '.yaml':
+    case '.yml':
+      raw = parseYaml(readFileSync(abs, 'utf8'));
+      break;
+    case '.ts':
+    case '.mts': {
+      // Best-effort dynamic import. tsx loader (registered by the CLI) handles TS at runtime.
+      const mod = (await import(pathToFileURL(abs).href)) as { default?: unknown };
+      raw = mod.default ?? mod;
+      break;
+    }
+    case '.js':
+    case '.mjs':
+    case '.cjs': {
+      const mod = (await import(pathToFileURL(abs).href)) as { default?: unknown };
+      raw = mod.default ?? mod;
+      break;
+    }
+    default:
+      throw new ConfigError(`Unsupported config extension: ${ext}`);
+  }
+
+  const parsed = ConfigSchema.safeParse(raw);
+  if (!parsed.success) {
+    throw new ConfigError(`Config validation failed: ${parsed.error.message}`, {
+      issues: parsed.error.issues,
+    });
+  }
+  return parsed.data;
+}
