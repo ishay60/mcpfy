@@ -22,6 +22,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "@mcpfy/config": "workspace:^",
+    "@mcpfy/connector-mongo": "workspace:^",
     "@mcpfy/connector-sql": "workspace:^",
     "@mcpfy/core": "workspace:^",
     "@mcpfy/security": "workspace:^",

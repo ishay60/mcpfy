@@ -4,8 +4,9 @@ import { extname, basename } from 'node:path';
 import pc from 'picocolors';
 import { loadConfig } from '@mcpfy/config';
 import { StdioTransport } from '@mcpfy/core/transports/stdio';
+import { StreamableHttpTransport } from '@mcpfy/core/transports/streamable-http';
 import { buildServerFromConfig } from '../factory.js';
-import { banner, section, kv, ready, hint, sym } from '../ui.js';
+import { banner, section, kv, ready, hint, sym, link } from '../ui.js';
 
 export interface ServeOptions {
   config: string;
@@ -30,13 +31,6 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
   const cfg = await loadConfig(opts.config);
   const { server, connectors } = await buildServerFromConfig(cfg);
 
-  if (opts.http) {
-    process.stderr.write(
-      pc.red('  ✗ HTTP transport arrives in Wave 2. Run without --http for stdio.\n'),
-    );
-    process.exit(1);
-  }
-
   section('Sources');
   for (const c of connectors) {
     const tools = c.listPrimitiveTools().length;
@@ -46,10 +40,34 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
   }
 
   section('Transport');
-  kv('Mode', pc.cyan('stdio'));
-  kv('Config', pc.dim(basename(opts.config)));
+  // --http flag overrides config; otherwise honor cfg.transport.kind.
+  const wantHttp = opts.http || cfg.transport.kind === 'http';
+  const httpHost = cfg.transport.kind === 'http' && !opts.http ? cfg.transport.host : opts.host;
+  const httpPort = cfg.transport.kind === 'http' && !opts.http ? cfg.transport.port : opts.port;
+  const configuredToken =
+    cfg.transport.kind === 'http' && cfg.transport.auth.type === 'bearer'
+      ? cfg.transport.auth.token
+      : undefined;
 
-  const transport = new StdioTransport();
+  let transport: StdioTransport | StreamableHttpTransport;
+  if (wantHttp) {
+    const httpTransport = new StreamableHttpTransport({
+      host: httpHost,
+      port: httpPort,
+      ...(configuredToken ? { bearerToken: configuredToken } : {}),
+    });
+    transport = httpTransport;
+    kv('Mode', pc.cyan('streamable-http'));
+    kv('URL', link(`http://${httpHost}:${httpPort}/mcp`));
+    kv('Health', link(`http://${httpHost}:${httpPort}/healthz`));
+    kv('Token', pc.yellow(httpTransport.bearerToken));
+    kv('Config', pc.dim(basename(opts.config)));
+  } else {
+    transport = new StdioTransport();
+    kv('Mode', pc.cyan('stdio'));
+    kv('Config', pc.dim(basename(opts.config)));
+  }
+
   await server.start(transport);
 
   ready(Date.now() - startedAt);

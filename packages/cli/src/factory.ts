@@ -6,7 +6,8 @@ import {
   resolveSecrets,
 } from '@mcpfy/config';
 import { defaultSecurityHooks } from '@mcpfy/security';
-import { PostgresDialect, SqliteDialect, SqlConnector } from '@mcpfy/connector-sql';
+import { MysqlDialect, PostgresDialect, SqlConnector, SqliteDialect } from '@mcpfy/connector-sql';
+import { MongoConnector } from '@mcpfy/connector-mongo';
 
 export interface BuiltServer {
   server: McpfyServer;
@@ -84,10 +85,18 @@ async function buildConnector(src: SourceConfig): Promise<Connector> {
       return new SqlConnector({ id: src.id, dialect: new SqliteDialect(url) });
     }
     case 'mysql':
-    case 'mariadb':
-      throw new ConfigError(`Connector "${src.kind}" arrives in Wave 2.`);
-    case 'mongo':
-      throw new ConfigError('MongoDB connector arrives in Wave 2.');
+    case 'mariadb': {
+      const url = await resolveSecrets(src.url);
+      return new SqlConnector({ id: src.id, dialect: new MysqlDialect(url) });
+    }
+    case 'mongo': {
+      const url = await resolveSecrets(src.url);
+      return new MongoConnector({
+        id: src.id,
+        url,
+        ...(src.database ? { database: src.database } : {}),
+      });
+    }
     case 'openapi':
       throw new ConfigError('OpenAPI connector arrives in Wave 3.');
     default: {

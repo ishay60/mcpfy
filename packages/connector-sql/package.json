@@ -24,16 +24,18 @@
   },
   "dependencies": {
     "@mcpfy/core": "workspace:^",
+    "node-sql-parser": "^5.3.4",
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
     "better-sqlite3": "^12.4.1",
+    "mysql2": "^3.11.3",
     "pg": "^8.13.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^22.7.4",
     "@types/pg": "^8.11.10",
-    "@types/better-sqlite3": "^7.6.11",
     "typescript": "^5.6.2",
     "vitest": "^2.1.1"
   },

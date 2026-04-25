@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/core",
+  "name": "@mcpfy/connector-mongo",
   "version": "0.0.1",
-  "description": "Core runtime for mcpfy: Connector interface, server, transports, and the non-bypassable security pipeline.",
+  "description": "MongoDB connector for mcpfy. Sample-based schema inference, read-only find / aggregate primitives, prompt-injection-safe results.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,14 +10,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./transports/stdio": {
-      "types": "./dist/transports/stdio.d.ts",
-      "import": "./dist/transports/stdio.js"
-    },
-    "./transports/streamable-http": {
-      "types": "./dist/transports/streamable-http.d.ts",
-      "import": "./dist/transports/streamable-http.js"
     }
   },
   "files": [
@@ -31,9 +23,11 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^3.23.8",
-    "zod-to-json-schema": "^3.23.5"
+    "@mcpfy/core": "workspace:^",
+    "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "mongodb": "^6.10.0"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
