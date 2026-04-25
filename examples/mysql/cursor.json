@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcpfy": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpfy/cli",
+        "serve",
+        "--config",
+        "/abs/path/to/examples/mysql/mcpfy.config.ts"
+      ],
+      "env": {
+        "DATABASE_URL": "mysql://user:pass@localhost:3306/app"
+      }
+    }
+  }
+}

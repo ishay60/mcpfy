@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcpfy": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mcpfy/cli",
+        "serve",
+        "--config",
+        "/abs/path/to/examples/mongo/mcpfy.config.ts"
+      ],
+      "env": {
+        "MONGO_URL": "mongodb://localhost:27017/app"
+      }
+    }
+  }
+}
