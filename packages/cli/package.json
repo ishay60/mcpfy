@@ -26,7 +26,7 @@
     "@mcpolyglot/connector-sql": "workspace:^",
     "@mcpolyglot/core": "workspace:^",
     "@mcpolyglot/security": "workspace:^",
-    "commander": "^12.1.0",
+    "commander": "^14.0.3",
     "picocolors": "^1.1.0",
     "tsx": "^4.19.1"
   },
