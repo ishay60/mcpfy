@@ -1,0 +1,69 @@
+name: Release
+
+# When a push lands on develop, the changesets action does one of two things:
+#
+#   1. If pending changesets exist, it opens (or updates) a "Version Packages" PR
+#      that, when merged, will trigger this workflow again with no pending
+#      changesets — at which point step 2 runs.
+#
+#   2. If no pending changesets exist, it runs `changeset publish`, which
+#      `npm publish`-es every package whose version doesn't yet exist on the
+#      registry. Provenance is enabled per-package via publishConfig.
+#
+# Required repo secret: NPM_TOKEN — an npm Automation token with publish
+# scope on the @mcpfy org. The workflow no-ops cleanly until that's set.
+
+on:
+  push:
+    branches: [develop]
+
+# Required by the changesets action: contents (push the version PR) and
+# pull-requests (open/update the version PR). id-token is required for npm
+# provenance so the published tarball is cryptographically tied to this run.
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  release:
+    name: Version & publish
+    runs-on: ubuntu-latest
+    # Skip if the push is the version-bump commit itself — the publish step
+    # only needs to run on the *follow-up* push after the PR merges.
+    if: github.repository == 'ishay60/mcpfy'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm exec changeset publish
+          version: pnpm exec changeset version
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
