@@ -142,11 +142,39 @@ export type OpenApiSourceConfig = z.infer<typeof OpenApiSourceSchema>;
 export type SourceConfig = SqlSourceConfig | MongoSourceConfig | OpenApiSourceConfig;
 export type TransportConfig = z.infer<typeof TransportSchema>;
 
-/** Identity helper for type-safe config files (`mcpfy.config.ts`). */
+/**
+ * Identity helper for type-safe `mcpfy.config.ts` files. Wraps the config so editors
+ * give you autocomplete and Zod's validation runs at load time rather than crashing later.
+ *
+ * @example
+ * ```ts
+ * import { defineConfig } from '@mcpfy/config';
+ *
+ * export default defineConfig({
+ *   transport: { kind: 'stdio' },
+ *   sources: [{
+ *     id: 'pg.main',
+ *     kind: 'postgres',
+ *     url: '${env:DATABASE_URL}',
+ *     scopes: ['schema:read', 'tables:read', 'query:raw'],
+ *     perEntityTools: { enabled: false },
+ *     limits: { rowCap: 200, timeoutMs: 10_000, maxBytes: 262144 },
+ *     redact: { columns: ['public.users.password_hash'], patterns: [] },
+ *   }],
+ * });
+ * ```
+ */
 export function defineConfig(cfg: McpfyConfig | (() => McpfyConfig)): McpfyConfig {
   return typeof cfg === 'function' ? cfg() : cfg;
 }
 
+/**
+ * Load and validate a config file. Supports `.ts`, `.mts`, `.js`, `.mjs`, `.cjs`,
+ * `.json`, `.yaml`, and `.yml`. TS files require the `tsx` loader (the CLI registers it).
+ *
+ * @throws {ConfigError} when the file is missing, has an unsupported extension,
+ *   or fails Zod validation.
+ */
 export async function loadConfig(path: string): Promise<McpfyConfig> {
   const abs = isAbsolute(path) ? path : resolve(process.cwd(), path);
   if (!existsSync(abs)) {

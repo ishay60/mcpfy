@@ -14,31 +14,45 @@ import {
 } from './tool.js';
 import { McpfyError, ScopeError, TimeoutError } from './errors.js';
 
+/**
+ * The non-bypassable pipeline that wraps every tool call. Implementations live in
+ * `@mcpfy/security`; consumers usually get one via `defaultSecurityHooks()` and don't
+ * implement this directly.
+ *
+ * Every method here corresponds to a numbered phase in `McpfyServer.executeTool`.
+ */
 export interface SecurityHooks {
-  /** Reject if the granted scopes don't cover the tool's required scopes. */
+  /** Phase 1 — reject if granted scopes don't cover the tool's required scopes. */
   checkScopes(toolName: string, required: readonly Scope[], granted: ReadonlySet<Scope>): void;
-  /** Token-bucket / concurrency check. Throws RateLimitError on violation. */
+  /** Phase 2 — token-bucket + concurrency gate. Throws `RateLimitError` on violation. */
   checkRateLimit(toolName: string, sessionId: string): Promise<void>;
-  /** Run after the handler — strip secrets, drop denied columns, etc. Returns result and count. */
+  /** Phase 5 — strip secrets, drop denied columns. Returns the new result and the redaction count. */
   redact(toolName: string, result: ToolResult): { result: ToolResult; redactionsApplied: number };
-  /** Hard cap on serialized output bytes. Truncates and flips metadata.truncated. */
+  /** Phase 6 — hard cap on serialized output bytes. Truncates and flips `metadata.truncated`. */
   enforceSize(toolName: string, result: ToolResult, maxBytes: number): ToolResult;
-  /** Wrap untrusted data so the LLM treats it as data, not instructions. */
+  /** Phase 7 — wrap the result so the model treats it as data, not instructions. */
   wrapUntrusted(result: ToolResult): ToolResult;
-  /** Append one JSONL line per call. Never logs raw args / results. */
+  /** Phase 8 — append one JSONL line. Never receives raw args or result rows. */
   audit(entry: AuditEntry): Promise<void>;
 }
 
+/** Bundle of security primitives `McpfyServer` needs. Built by `defaultSecurityHooks()`. */
 export interface SecurityServices {
   hooks: SecurityHooks;
   defaultLimits: ToolExecLimits;
   defaultScopes: readonly Scope[];
 }
 
+/**
+ * One entry in the JSONL audit log. Logged for every call, including failed ones.
+ * Args and result rows are deliberately absent — only metadata and a hash of the args.
+ */
 export interface AuditEntry {
+  /** ISO-8601 UTC timestamp. */
   ts: string;
   sessionId: string;
   tool: string;
+  /** First 16 chars of `sha256(JSON.stringify(args))`. Enough for forensics, not for reconstruction. */
   argsHash: string;
   scopes: Scope[];
   durationMs: number;
@@ -48,11 +62,14 @@ export interface AuditEntry {
   error?: { code: string; message: string };
 }
 
+/** Constructor options for `McpfyServer`. */
 export interface McpfyServerOptions {
   name?: string;
   version?: string;
   connectors: Connector[];
+  /** Per-source per-entity configuration. Keyed by `connector.id`. */
   perEntity?: Record<string, PerEntityConfig>;
+  /** Scopes granted to the calling session. Defaults to `DEFAULT_SCOPES` (read-only). */
   scopes?: readonly Scope[];
   security: SecurityServices;
   logger?: {
@@ -63,6 +80,30 @@ export interface McpfyServerOptions {
   };
 }
 
+/**
+ * MCP server that wires connectors + security hooks + a transport.
+ *
+ * Every `CallTool` request goes through `executeTool`, which runs the same eight
+ * numbered phases (scope → rate-limit → timeout → handler → redact → size cap →
+ * wrap → audit) in the same order — connectors cannot opt out.
+ *
+ * @example
+ * ```ts
+ * import { McpfyServer } from '@mcpfy/core';
+ * import { StdioTransport } from '@mcpfy/core/transports/stdio';
+ * import { defaultSecurityHooks } from '@mcpfy/security';
+ *
+ * const server = new McpfyServer({
+ *   connectors: [myConnector],
+ *   security: {
+ *     hooks: defaultSecurityHooks(),
+ *     defaultLimits: { rowCap: 200, timeoutMs: 10_000, maxBytes: 256 * 1024 },
+ *     defaultScopes: ['schema:read', 'tables:read'],
+ *   },
+ * });
+ * await server.start(new StdioTransport());
+ * ```
+ */
 export class McpfyServer {
   private readonly server: Server;
   private readonly tools = new Map<string, ToolDefinition>();
