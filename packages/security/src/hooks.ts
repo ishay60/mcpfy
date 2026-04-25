@@ -5,13 +5,31 @@ import { RateLimiter, type RateLimitOptions } from './rate-limiter.js';
 import { AuditLogger, type AuditLoggerOptions } from './audit.js';
 import { wrapUntrusted, enforceSize, type WrapMode } from './wrap.js';
 
+/** Options for `defaultSecurityHooks`. All fields are optional — sensible defaults apply. */
 export interface DefaultHookOptions {
   rateLimit?: RateLimitOptions;
   audit?: AuditLoggerOptions;
+  /** Extra redaction rules and per-column deny lists, on top of the built-ins. */
   redactor?: { customRules?: RedactionRule[]; denyColumns?: ColumnDenyEntry[] };
+  /** How aggressively to wrap untrusted result data. Defaults to `'strict'`. */
   wrapMode?: WrapMode;
 }
 
+/**
+ * Construct the standard set of `SecurityHooks` — scope guard, rate limiter, redactor,
+ * audit logger, and the untrusted-data wrapper. Pass the result to `McpfyServer`'s
+ * `security.hooks`.
+ *
+ * @example
+ * ```ts
+ * import { defaultSecurityHooks } from '@mcpfy/security';
+ *
+ * const hooks = defaultSecurityHooks({
+ *   rateLimit: { defaultPerMinute: 60, maxConcurrent: 8 },
+ *   redactor: { denyColumns: [{ table: 'public.users', column: 'password_hash' }] },
+ * });
+ * ```
+ */
 export function defaultSecurityHooks(opts: DefaultHookOptions = {}): SecurityHooks {
   const guard = new ScopeGuard();
   const limiter = new RateLimiter(opts.rateLimit);
@@ -41,7 +59,11 @@ export function defaultSecurityHooks(opts: DefaultHookOptions = {}): SecurityHoo
   };
 }
 
-/** Compose multiple SecurityHooks objects, running each phase in order. */
+/**
+ * Compose multiple `SecurityHooks` objects into one. Each phase runs through the
+ * provided hooks in order — useful for adding custom audit sinks or extra redaction
+ * passes alongside the defaults.
+ */
 export function composeHooks(...hooks: SecurityHooks[]): SecurityHooks {
   return {
     checkScopes(toolName, required, granted) {
