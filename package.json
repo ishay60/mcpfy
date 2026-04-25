@@ -28,6 +28,7 @@
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.0",
     "@types/node": "^22.7.4",
     "prettier": "^3.3.3",
     "tsx": "^4.19.1",
