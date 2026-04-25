@@ -5,7 +5,13 @@ import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
 import { ConfigError } from '@mcpfy/core';
 
-const ScopeSchema = z.enum(['schema:read', 'tables:read', 'tables:write', 'query:raw', 'http:call']);
+const ScopeSchema = z.enum([
+  'schema:read',
+  'tables:read',
+  'tables:write',
+  'query:raw',
+  'http:call',
+]);
 
 const PerEntitySchema = z
   .object({
@@ -34,7 +40,12 @@ const LimitsSchema = z
   .object({
     rowCap: z.number().int().positive().max(10_000).default(200),
     timeoutMs: z.number().int().positive().max(60_000).default(10_000),
-    maxBytes: z.number().int().positive().max(8 * 1024 * 1024).default(256 * 1024),
+    maxBytes: z
+      .number()
+      .int()
+      .positive()
+      .max(8 * 1024 * 1024)
+      .default(256 * 1024),
   })
   .default({ rowCap: 200, timeoutMs: 10_000, maxBytes: 256 * 1024 });
 
@@ -71,7 +82,9 @@ const OpenApiSourceSchema = z.object({
       z.object({ type: z.literal('basic'), username: z.string(), password: z.string() }),
     ])
     .default({ type: 'none' }),
-  allowMethods: z.array(z.enum(['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE'])).default(['GET', 'HEAD', 'OPTIONS']),
+  allowMethods: z
+    .array(z.enum(['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']))
+    .default(['GET', 'HEAD', 'OPTIONS']),
   scopes: z.array(ScopeSchema).default(['http:call']),
   limits: LimitsSchema,
   redact: RedactSchema,

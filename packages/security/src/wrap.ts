@@ -40,7 +40,10 @@ export function enforceSize(_toolName: string, result: ToolResult, maxBytes: num
   let truncated = false;
 
   for (const block of result.content) {
-    const size = block.type === 'text' ? Buffer.byteLength(block.text ?? '', 'utf8') : Buffer.byteLength(JSON.stringify(block.data ?? null), 'utf8');
+    const size =
+      block.type === 'text'
+        ? Buffer.byteLength(block.text ?? '', 'utf8')
+        : Buffer.byteLength(JSON.stringify(block.data ?? null), 'utf8');
     if (total + size <= maxBytes) {
       out.push(block);
       total += size;

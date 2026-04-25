@@ -20,10 +20,7 @@ export type {
   Scope,
 } from './tool.js';
 
-export {
-  ALL_SCOPES,
-  DEFAULT_SCOPES,
-} from './tool.js';
+export { ALL_SCOPES, DEFAULT_SCOPES } from './tool.js';
 
 export {
   McpfyServer,
@@ -34,10 +31,4 @@ export {
 
 export type { Transport } from './transport.js';
 
-export {
-  McpfyError,
-  ScopeError,
-  RateLimitError,
-  TimeoutError,
-  ConfigError,
-} from './errors.js';
+export { McpfyError, ScopeError, RateLimitError, TimeoutError, ConfigError } from './errors.js';

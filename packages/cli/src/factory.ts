@@ -15,7 +15,10 @@ export interface BuiltServer {
   perEntity: Record<string, { enabled: boolean; include?: string[]; exclude?: string[] }>;
 }
 
-export async function buildServerFromConfig(cfg: McpfyConfig, logger = makeStderrLogger()): Promise<BuiltServer> {
+export async function buildServerFromConfig(
+  cfg: McpfyConfig,
+  logger = makeStderrLogger(),
+): Promise<BuiltServer> {
   const connectors: Connector[] = [];
   const perEntity: BuiltServer['perEntity'] = {};
 

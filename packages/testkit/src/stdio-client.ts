@@ -16,10 +16,7 @@ export async function connectStdioClient(opts: {
     args: opts.args ?? [],
     env: opts.env,
   });
-  const client = new Client(
-    { name: 'mcpfy-testkit', version: '0.0.1' },
-    { capabilities: {} },
-  );
+  const client = new Client({ name: 'mcpfy-testkit', version: '0.0.1' }, { capabilities: {} });
   await client.connect(transport);
   return {
     client,

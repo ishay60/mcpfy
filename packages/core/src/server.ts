@@ -1,9 +1,6 @@
 import { randomUUID, createHash } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import type { Connector, PerEntityConfig } from './connector.js';
 import type { Transport } from './transport.js';
@@ -237,11 +234,17 @@ export class McpfyServer {
 }
 
 function hashArgs(args: unknown): string {
-  return createHash('sha256').update(JSON.stringify(args ?? {})).digest('hex').slice(0, 16);
+  return createHash('sha256')
+    .update(JSON.stringify(args ?? {}))
+    .digest('hex')
+    .slice(0, 16);
 }
 
 /** Translate mcpfy's internal ToolResult into the MCP CallToolResult shape. */
-function toMcpResult(r: ToolResult): { content: Array<{ type: 'text'; text: string }>; isError?: boolean } {
+function toMcpResult(r: ToolResult): {
+  content: Array<{ type: 'text'; text: string }>;
+  isError?: boolean;
+} {
   return {
     content: r.content.map((b) => {
       if (b.type === 'text') return { type: 'text', text: b.text ?? '' };

@@ -30,7 +30,12 @@ export interface OperationSchema {
   method: string;
   path: string;
   summary?: string;
-  parameters: Array<{ name: string; in: 'query' | 'path' | 'header'; required: boolean; type: string }>;
+  parameters: Array<{
+    name: string;
+    in: 'query' | 'path' | 'header';
+    required: boolean;
+    type: string;
+  }>;
   requestBody?: { contentType: string; schemaRef?: string };
 }
 

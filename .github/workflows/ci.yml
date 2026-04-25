@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [develop, main]
   pull_request:
-    branches: [main]
+    branches: [develop, main]
 
 permissions:
   contents: read
@@ -43,18 +43,4 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
-  integration:
-    name: Integration (testcontainers)
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: corepack enable
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - run: pnpm test:integration
-        env:
-          TESTCONTAINERS_RYUK_DISABLED: 'true'
+# integration job is enabled in Wave 2 once testcontainers fixtures land in @mcpfy/testkit.

@@ -35,10 +35,10 @@ Then ask: _"List the tables and sample 5 rows from the largest one."_
 
 ## What you get
 
-| Tool                  | Description                                               |
-| --------------------- | --------------------------------------------------------- |
-| `pg.main.list_tables` | All tables and their columns.                             |
-| `pg.main.describe_table` | One table's columns, types, primary key.                |
-| `pg.main.query`       | Read-only SQL with parameterized args, row cap, timeout.  |
+| Tool                     | Description                                              |
+| ------------------------ | -------------------------------------------------------- |
+| `pg.main.list_tables`    | All tables and their columns.                            |
+| `pg.main.describe_table` | One table's columns, types, primary key.                 |
+| `pg.main.query`          | Read-only SQL with parameterized args, row cap, timeout. |
 
 All results are passed through redaction (emails / JWTs / SSNs / etc.), wrapped in an `<mcpfy-data>` "untrusted-data" block, and logged to `~/.mcpfy/audit.log`.

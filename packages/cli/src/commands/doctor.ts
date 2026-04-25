@@ -24,9 +24,7 @@ export async function doctorCommand(opts: DoctorOptions): Promise<boolean> {
   }
 
   // Credential heuristic
-  const literalUrls = cfg.sources.filter(
-    (s) => 'url' in s && looksLikeLiteralCredential(s.url),
-  );
+  const literalUrls = cfg.sources.filter((s) => 'url' in s && looksLikeLiteralCredential(s.url));
   if (literalUrls.length > 0) {
     for (const s of literalUrls) {
       warn(

@@ -125,7 +125,8 @@ export class PostgresDialect implements SqlDialect {
   }
 
   private requirePool(): import('pg').Pool {
-    if (!this.pool) throw new McpfyError('connector.not_initialized', 'PostgresDialect not connected');
+    if (!this.pool)
+      throw new McpfyError('connector.not_initialized', 'PostgresDialect not connected');
     return this.pool;
   }
 }

@@ -71,14 +71,21 @@ export class SqlConnector implements Connector {
         description: `Describe one table in the ${id} database, including columns, types, and primary key.`,
         inputSchema: z
           .object({
-            name: z.string().min(1).describe('Table name. Use schema-qualified form if needed (e.g. "public.users").'),
+            name: z
+              .string()
+              .min(1)
+              .describe('Table name. Use schema-qualified form if needed (e.g. "public.users").'),
           })
           .strict(),
         scopes: ['schema:read'],
         readOnly: true,
         handler: async ({ name }) => {
           const tables = await this.cachedOrFetchTables();
-          const found = tables.find((t) => qualifiedName(t).toLowerCase() === name.toLowerCase() || t.name.toLowerCase() === name.toLowerCase());
+          const found = tables.find(
+            (t) =>
+              qualifiedName(t).toLowerCase() === name.toLowerCase() ||
+              t.name.toLowerCase() === name.toLowerCase(),
+          );
           if (!found) {
             throw new McpfyError('not_found', `Table "${name}" not found in ${id}`);
           }
@@ -90,7 +97,10 @@ export class SqlConnector implements Connector {
         description: `Run a read-only SQL query against the ${id} database. Use parameterized form ($1, $2, ...). Writes are rejected.`,
         inputSchema: z
           .object({
-            sql: z.string().min(1).describe('SQL query string. Read-only — INSERT/UPDATE/DELETE/DDL will be rejected.'),
+            sql: z
+              .string()
+              .min(1)
+              .describe('SQL query string. Read-only — INSERT/UPDATE/DELETE/DDL will be rejected.'),
             params: z.array(z.union([z.string(), z.number(), z.boolean(), z.null()])).optional(),
             limit: z.number().int().positive().max(1000).optional(),
           })

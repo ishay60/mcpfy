@@ -31,12 +31,7 @@ export async function toolsCommand(opts: ToolsOptions): Promise<void> {
 
   section(`${rows.length} tool(s)`, stdoutSink);
   table(
-    [
-      { header: 'NAME' },
-      { header: 'MODE' },
-      { header: 'SCOPES' },
-      { header: 'DESCRIPTION' },
-    ],
+    [{ header: 'NAME' }, { header: 'MODE' }, { header: 'SCOPES' }, { header: 'DESCRIPTION' }],
     rows,
     stdoutSink,
   );

@@ -36,8 +36,7 @@ export const sym = {
  *     turn your databases into MCP servers
  */
 export function banner(opts: { version: string; tagline?: string }, sink: Sink = stderrSink): void {
-  const wordmark =
-    pc.cyan('m') + pc.cyan('c') + pc.cyan('p') + pc.magenta('f') + pc.magenta('y');
+  const wordmark = pc.cyan('m') + pc.cyan('c') + pc.cyan('p') + pc.magenta('f') + pc.magenta('y');
   const triangle = pc.cyan('▲');
   const ver = pc.dim(`v${opts.version}`);
   sink('');

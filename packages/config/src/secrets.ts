@@ -41,9 +41,7 @@ async function resolveOne(kind: string, target: string): Promise<string> {
       try {
         const keytar = await import('keytar').catch(() => null);
         if (!keytar) {
-          throw new ConfigError(
-            'keytar is not installed; install it to use ${keychain:...} refs',
-          );
+          throw new ConfigError('keytar is not installed; install it to use ${keychain:...} refs');
         }
         const v = await keytar.default.getPassword('mcpfy', target);
         if (v == null) throw new ConfigError(`Keychain item not found: mcpfy/${target}`);
