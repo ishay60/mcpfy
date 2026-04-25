@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/connector-sql",
+  "name": "@mcpolyglot/connector-sql",
   "version": "0.0.1",
-  "description": "Shared SQL connector for mcpfy with Postgres, MySQL/MariaDB, and SQLite dialects. Read-only-by-default with per-dialect enforcement.",
+  "description": "Shared SQL connector for mcpolyglot with Postgres, MySQL/MariaDB, and SQLite dialects. Read-only-by-default with per-dialect enforcement.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@mcpfy/core": "workspace:^",
+    "@mcpolyglot/core": "workspace:^",
     "node-sql-parser": "^5.3.4",
     "zod": "^3.23.8"
   },

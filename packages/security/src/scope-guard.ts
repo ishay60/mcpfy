@@ -1,4 +1,4 @@
-import { ScopeError, type Scope } from '@mcpfy/core';
+import { ScopeError, type Scope } from '@mcpolyglot/core';
 
 export class ScopeGuard {
   check(toolName: string, required: readonly Scope[], granted: ReadonlySet<Scope>): void {

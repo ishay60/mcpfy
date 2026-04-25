@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/config",
+  "name": "@mcpolyglot/config",
   "version": "0.0.1",
-  "description": "Config schema and loader for mcpfy. Validates user config and resolves secrets via env / file / OS keychain refs.",
+  "description": "Config schema and loader for mcpolyglot. Validates user config and resolves secrets via env / file / OS keychain refs.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@mcpfy/core": "workspace:^",
+    "@mcpolyglot/core": "workspace:^",
     "tsx": "^4.19.1",
     "yaml": "^2.5.1",
     "zod": "^3.23.8"

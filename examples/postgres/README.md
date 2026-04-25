@@ -1,11 +1,11 @@
 # PostgreSQL example
 
-A minimal mcpfy config that exposes a single Postgres database to Claude Desktop, Cursor, or Claude Code over stdio.
+A minimal mcpolyglot config that exposes a single Postgres database to Claude Desktop, Cursor, or Claude Code over stdio.
 
 ## 1. Install
 
 ```bash
-npx @mcpfy/cli --version
+npx @mcpolyglot/cli --version
 ```
 
 ## 2. Configure
@@ -20,7 +20,7 @@ cp .env.example .env
 
 ```bash
 DATABASE_URL=$(grep DATABASE_URL .env | cut -d= -f2-) \
-  npx @mcpfy/cli doctor --config ./mcpfy.config.ts
+  npx @mcpolyglot/cli doctor --config ./mcpolyglot.config.ts
 ```
 
 You should see `✓ pg.main: connected` and the list of generated tools.
@@ -41,4 +41,4 @@ Then ask: _"List the tables and sample 5 rows from the largest one."_
 | `pg.main.describe_table` | One table's columns, types, primary key.                 |
 | `pg.main.query`          | Read-only SQL with parameterized args, row cap, timeout. |
 
-All results are passed through redaction (emails / JWTs / SSNs / etc.), wrapped in an `<mcpfy-data>` "untrusted-data" block, and logged to `~/.mcpfy/audit.log`.
+All results are passed through redaction (emails / JWTs / SSNs / etc.), wrapped in an `<mcpolyglot-data>` "untrusted-data" block, and logged to `~/.mcpolyglot/audit.log`.

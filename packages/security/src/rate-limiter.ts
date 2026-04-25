@@ -1,4 +1,4 @@
-import { RateLimitError } from '@mcpfy/core';
+import { RateLimitError } from '@mcpolyglot/core';
 
 export interface RateLimitOptions {
   perMinute?: number;

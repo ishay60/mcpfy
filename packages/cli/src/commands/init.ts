@@ -9,13 +9,13 @@ export interface InitOptions {
 }
 
 export async function initCommand(opts: InitOptions): Promise<void> {
-  banner({ version: '0.0.1', tagline: 'init — scaffold mcpfy.config.ts' }, stdoutSink);
-  p.intro(pc.bgCyan(pc.black(' mcpfy init ')));
+  banner({ version: '0.0.1', tagline: 'init — scaffold mcpolyglot.config.ts' }, stdoutSink);
+  p.intro(pc.bgCyan(pc.black(' mcpolyglot init ')));
 
-  const target = resolve(opts.cwd, 'mcpfy.config.ts');
+  const target = resolve(opts.cwd, 'mcpolyglot.config.ts');
   if (existsSync(target)) {
     const proceed = await p.confirm({
-      message: `mcpfy.config.ts already exists in ${opts.cwd}. Overwrite?`,
+      message: `mcpolyglot.config.ts already exists in ${opts.cwd}. Overwrite?`,
       initialValue: false,
     });
     if (p.isCancel(proceed) || !proceed) {
@@ -48,7 +48,7 @@ export async function initCommand(opts: InitOptions): Promise<void> {
   if (kind === 'postgres') {
     url = '${env:DATABASE_URL}';
     p.note(
-      `Set ${pc.cyan('DATABASE_URL')} in your environment before running ${pc.bold('mcpfy serve')}.`,
+      `Set ${pc.cyan('DATABASE_URL')} in your environment before running ${pc.bold('mcpolyglot serve')}.`,
       'Example',
     );
   } else {
@@ -68,9 +68,9 @@ export async function initCommand(opts: InitOptions): Promise<void> {
 
   // Slick "next steps" panel — Astro/Vite-flavored
   section('Next', stdoutSink);
-  kv('Validate', pc.cyan('mcpfy doctor'), stdoutSink);
-  kv('List', pc.cyan('mcpfy tools'), stdoutSink);
-  kv('Run', pc.cyan('mcpfy serve'), stdoutSink);
+  kv('Validate', pc.cyan('mcpolyglot doctor'), stdoutSink);
+  kv('List', pc.cyan('mcpolyglot tools'), stdoutSink);
+  kv('Run', pc.cyan('mcpolyglot serve'), stdoutSink);
 
   section('Wire into your agent', stdoutSink);
   process.stdout.write(
@@ -78,18 +78,18 @@ export async function initCommand(opts: InitOptions): Promise<void> {
   );
   process.stdout.write(`  ${sym.bullet} ${pc.bold('Cursor')}  ${pc.dim('~/.cursor/mcp.json')}\n`);
   process.stdout.write(
-    `  ${sym.bullet} ${pc.bold('Claude Code')}  ${pc.dim('claude mcp add mcpfy -- npx -y @mcpfy/cli serve --config ' + target)}\n`,
+    `  ${sym.bullet} ${pc.bold('Claude Code')}  ${pc.dim('claude mcp add mcpolyglot -- npx -y @mcpolyglot/cli serve --config ' + target)}\n`,
   );
   process.stdout.write('\n');
-  hint('docs: github.com/ishay60/mcpfy', stdoutSink);
+  hint('docs: github.com/ishay60/mcpolyglot', stdoutSink);
   process.stdout.write('\n');
 }
 
 function renderConfig(opts: { kind: 'postgres' | 'sqlite'; id: string; url: string }): string {
-  return `import { defineConfig } from '@mcpfy/config';
+  return `import { defineConfig } from '@mcpolyglot/config';
 
 export default defineConfig({
-  server: { name: 'mcpfy', version: '0.0.1' },
+  server: { name: 'mcpolyglot', version: '0.0.1' },
   transport: { kind: 'stdio' },
   sources: [
     {
@@ -105,7 +105,7 @@ export default defineConfig({
       },
     },
   ],
-  audit: { path: '~/.mcpfy/audit.log' },
+  audit: { path: '~/.mcpolyglot/audit.log' },
   rateLimit: { defaultPerMinute: 30, maxConcurrent: 5 },
   security: { wrapMode: 'strict' },
 });

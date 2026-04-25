@@ -32,19 +32,19 @@ importers:
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
-      '@mcpfy/config':
+      '@mcpolyglot/config':
         specifier: workspace:^
         version: link:../config
-      '@mcpfy/connector-mongo':
+      '@mcpolyglot/connector-mongo':
         specifier: workspace:^
         version: link:../connector-mongo
-      '@mcpfy/connector-sql':
+      '@mcpolyglot/connector-sql':
         specifier: workspace:^
         version: link:../connector-sql
-      '@mcpfy/core':
+      '@mcpolyglot/core':
         specifier: workspace:^
         version: link:../core
-      '@mcpfy/security':
+      '@mcpolyglot/security':
         specifier: workspace:^
         version: link:../security
       commander:
@@ -69,7 +69,7 @@ importers:
 
   packages/config:
     dependencies:
-      '@mcpfy/core':
+      '@mcpolyglot/core':
         specifier: workspace:^
         version: link:../core
       tsx:
@@ -98,7 +98,7 @@ importers:
 
   packages/connector-mongo:
     dependencies:
-      '@mcpfy/core':
+      '@mcpolyglot/core':
         specifier: workspace:^
         version: link:../core
       zod:
@@ -121,7 +121,7 @@ importers:
 
   packages/connector-sql:
     dependencies:
-      '@mcpfy/core':
+      '@mcpolyglot/core':
         specifier: workspace:^
         version: link:../core
       node-sql-parser:
@@ -181,7 +181,7 @@ importers:
 
   packages/security:
     dependencies:
-      '@mcpfy/core':
+      '@mcpolyglot/core':
         specifier: workspace:^
         version: link:../core
     devDependencies:

@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import type { ToolDefinition, ToolExecCtx } from '@mcpfy/core';
+import type { ToolDefinition, ToolExecCtx } from '@mcpolyglot/core';
 import { SqlConnector } from '../connector.js';
 import { SqliteDialect } from '../dialects/sqlite.js';
 
@@ -36,7 +36,7 @@ d('sqlite end-to-end via SqlConnector', () => {
   };
 
   beforeAll(async () => {
-    tmpDir = mkdtempSync(join(tmpdir(), 'mcpfy-sqlite-int-'));
+    tmpDir = mkdtempSync(join(tmpdir(), 'mcpolyglot-sqlite-int-'));
     dbPath = join(tmpDir, 'test.db');
 
     const Database = (await import('better-sqlite3')).default;

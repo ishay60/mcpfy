@@ -1,7 +1,7 @@
-import { defineConfig } from '@mcpfy/config';
+import { defineConfig } from '@mcpolyglot/config';
 
 export default defineConfig({
-  server: { name: 'mcpfy', version: '0.0.1' },
+  server: { name: 'mcpolyglot', version: '0.0.1' },
   transport: {
     kind: 'http',
     host: '127.0.0.1', // bind to loopback by default; put behind a TLS proxy for non-local
@@ -9,9 +9,9 @@ export default defineConfig({
     auth: {
       type: 'bearer',
       // Pin a long-lived token via env so clients have something stable to send.
-      // Omit this whole `token` line and mcpfy will mint a fresh token on each
+      // Omit this whole `token` line and mcpolyglot will mint a fresh token on each
       // start and print it on stderr (great for ad-hoc, useless for clients).
-      token: '${env:MCPFY_BEARER_TOKEN}',
+      token: '${env:MCPOLYGLOT_BEARER_TOKEN}',
     },
   },
   sources: [
@@ -25,7 +25,7 @@ export default defineConfig({
       redact: { columns: ['public.users.password_hash'], patterns: [] },
     },
   ],
-  audit: { path: '~/.mcpfy/audit.log' },
+  audit: { path: '~/.mcpolyglot/audit.log' },
   rateLimit: { defaultPerMinute: 60, maxConcurrent: 8 },
   security: { wrapMode: 'strict' },
 });

@@ -1,16 +1,16 @@
 {
-  "name": "mcpfy",
+  "name": "mcpolyglot",
   "version": "0.0.0",
   "private": true,
   "description": "Open-source toolkit that turns databases and APIs into MCP servers for Claude, GPT, and other AI agents.",
   "license": "MIT",
-  "homepage": "https://github.com/ishay60/mcpfy#readme",
+  "homepage": "https://github.com/ishay60/mcpolyglot#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ishay60/mcpfy.git"
+    "url": "git+https://github.com/ishay60/mcpolyglot.git"
   },
   "bugs": {
-    "url": "https://github.com/ishay60/mcpfy/issues"
+    "url": "https://github.com/ishay60/mcpolyglot/issues"
   },
   "engines": {
     "node": ">=20"

@@ -1,13 +1,13 @@
 {
   "mcpServers": {
-    "mcpfy": {
+    "mcpolyglot": {
       "command": "npx",
       "args": [
         "-y",
-        "@mcpfy/cli",
+        "@mcpolyglot/cli",
         "serve",
         "--config",
-        "/abs/path/to/examples/mysql/mcpfy.config.ts"
+        "/abs/path/to/examples/mysql/mcpolyglot.config.ts"
       ],
       "env": {
         "DATABASE_URL": "mysql://user:pass@localhost:3306/app"

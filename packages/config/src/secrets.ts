@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { ConfigError } from '@mcpfy/core';
+import { ConfigError } from '@mcpolyglot/core';
 
 const REF_RE = /\$\{(env|file|keychain):([^}]+)\}/g;
 
@@ -43,8 +43,8 @@ async function resolveOne(kind: string, target: string): Promise<string> {
         if (!keytar) {
           throw new ConfigError('keytar is not installed; install it to use ${keychain:...} refs');
         }
-        const v = await keytar.default.getPassword('mcpfy', target);
-        if (v == null) throw new ConfigError(`Keychain item not found: mcpfy/${target}`);
+        const v = await keytar.default.getPassword('mcpolyglot', target);
+        if (v == null) throw new ConfigError(`Keychain item not found: mcpolyglot/${target}`);
         return v;
       } catch (err) {
         if (err instanceof ConfigError) throw err;
@@ -59,7 +59,7 @@ async function resolveOne(kind: string, target: string): Promise<string> {
 /**
  * Heuristic check: does this string look like a literal credential the user
  * should have wrapped in a `${env:...}` / `${file:...}` / `${keychain:...}` ref?
- * Used by `mcpfy doctor` to surface warnings.
+ * Used by `mcpolyglot doctor` to surface warnings.
  */
 export function looksLikeLiteralCredential(value: string): boolean {
   if (REF_RE.test(value)) return false;

@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/connector-mongo",
+  "name": "@mcpolyglot/connector-mongo",
   "version": "0.0.1",
-  "description": "MongoDB connector for mcpfy. Sample-based schema inference, read-only find / aggregate primitives, prompt-injection-safe results.",
+  "description": "MongoDB connector for mcpolyglot. Sample-based schema inference, read-only find / aggregate primitives, prompt-injection-safe results.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,7 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@mcpfy/core": "workspace:^",
+    "@mcpolyglot/core": "workspace:^",
     "zod": "^3.23.8"
   },
   "optionalDependencies": {

@@ -86,12 +86,12 @@ export interface ConnectorInitCtx {
  * Adapter that turns a data source into a list of MCP tools.
  *
  * A connector authors *handlers* — it does **not** author the security pipeline.
- * Every tool a connector returns is wrapped by `McpfyServer.executeTool` with
+ * Every tool a connector returns is wrapped by `McpolyglotServer.executeTool` with
  * scope check, rate limit, timeout, redaction, size cap, untrusted-wrap, and audit.
  *
  * @example
  * ```ts
- * import type { Connector } from '@mcpfy/core';
+ * import type { Connector } from '@mcpolyglot/core';
  *
  * class MyConnector implements Connector {
  *   readonly id = 'my.source';
@@ -113,12 +113,12 @@ export interface Connector {
   init(ctx: ConnectorInitCtx): Promise<void>;
   /** Drain the pool / driver. Called on `server.stop()`. Must be idempotent. */
   close(): Promise<void>;
-  /** Discover the source's schema. Used by primitive tools and `mcpfy doctor`. */
+  /** Discover the source's schema. Used by primitive tools and `mcpolyglot doctor`. */
   introspect(): Promise<SchemaSnapshot>;
   /** Tools always exposed for this source (e.g., `list_tables`, `query`). */
   listPrimitiveTools(): ToolDefinition[];
   /** Per-entity tools to expose when `cfg.enabled` is `true` (e.g., `users.find_by_email`). */
   generatePerEntityTools(cfg: PerEntityConfig): ToolDefinition[];
-  /** Lightweight ping. Used by `mcpfy doctor` and HTTP `/healthz`. */
+  /** Lightweight ping. Used by `mcpolyglot doctor` and HTTP `/healthz`. */
   health(): Promise<{ ok: boolean; latencyMs: number; details?: string }>;
 }

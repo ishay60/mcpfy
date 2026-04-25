@@ -1,14 +1,14 @@
-# @mcpfy/config
+# @mcpolyglot/config
 
-Config schema and loader for [mcpfy](https://github.com/ishay60/mcpfy). Validates user config with Zod and resolves secrets from env / file / OS keychain refs.
+Config schema and loader for [mcpolyglot](https://github.com/ishay60/mcpolyglot). Validates user config with Zod and resolves secrets from env / file / OS keychain refs.
 
 ## Define a config
 
 ```ts
-import { defineConfig } from '@mcpfy/config';
+import { defineConfig } from '@mcpolyglot/config';
 
 export default defineConfig({
-  server: { name: 'mcpfy', version: '0.0.1' },
+  server: { name: 'mcpolyglot', version: '0.0.1' },
   transport: { kind: 'stdio' },
   sources: [
     {
@@ -36,7 +36,7 @@ Literal credentials are rejected. You must use one of:
 
 ## Docs
 
-- Full README → https://github.com/ishay60/mcpfy
+- Full README → https://github.com/ishay60/mcpolyglot
 - Schema source → [`src/schema.ts`](./src/schema.ts)
 
 MIT licensed.

@@ -1,13 +1,13 @@
 {
   "mcpServers": {
-    "mcpfy": {
+    "mcpolyglot": {
       "command": "npx",
       "args": [
         "-y",
-        "@mcpfy/cli",
+        "@mcpolyglot/cli",
         "serve",
         "--config",
-        "/abs/path/to/examples/sqlite/mcpfy.config.ts"
+        "/abs/path/to/examples/sqlite/mcpolyglot.config.ts"
       ]
     }
   }

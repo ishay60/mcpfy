@@ -1,6 +1,6 @@
-$ mcpfy serve --http --port 7339 --config ./mcpfy.config.json
+$ mcpolyglot serve --http --port 7339 --config ./mcpolyglot.config.json
 
-  ▲  mcpfy  v0.0.1
+  ▲  mcpolyglot  v0.0.1
      one config, every database your agent needs
 
 
@@ -12,11 +12,11 @@ $ mcpfy serve --http --port 7339 --config ./mcpfy.config.json
   ➜  URL      http://127.0.0.1:7339/mcp
   ➜  Health   http://127.0.0.1:7339/healthz
   ➜  Token    REDACTED-DEMO-TOKEN-xxxxxxxxxx
-  ➜  Config   mcpfy.config.json
+  ➜  Config   mcpolyglot.config.json
 {"level":"info","msg":"connector.sql.connected","id":"sqlite.demo","dialect":"sqlite"}
 {"level":"info","msg":"http.listening","host":"127.0.0.1","port":7339,"tokenFingerprint":"REDA…xxxx"}
-{"level":"info","msg":"mcpfy.started","sessionId":"e46c7571-e0b2-4559-a982-e76ea6ee0cb4","transport":"http","tools":3}
+{"level":"info","msg":"mcpolyglot.started","sessionId":"e46c7571-e0b2-4559-a982-e76ea6ee0cb4","transport":"http","tools":3}
 
   ready in 20 ms
 
-  Press Ctrl+C to stop. Audit log: ~/.mcpfy/audit.log
+  Press Ctrl+C to stop. Audit log: ~/.mcpolyglot/audit.log

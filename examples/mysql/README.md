@@ -1,14 +1,14 @@
 # MySQL example
 
-A minimal mcpfy config that exposes a single MySQL (or MariaDB) database to Claude Desktop, Cursor, or Claude Code over stdio.
+A minimal mcpolyglot config that exposes a single MySQL (or MariaDB) database to Claude Desktop, Cursor, or Claude Code over stdio.
 
 ## 1. Install
 
 ```bash
-npx @mcpfy/cli --version
+npx @mcpolyglot/cli --version
 ```
 
-The MySQL driver (`mysql2`) is pulled in as an optional dep of `@mcpfy/connector-sql`; you don't need to install it separately.
+The MySQL driver (`mysql2`) is pulled in as an optional dep of `@mcpolyglot/connector-sql`; you don't need to install it separately.
 
 ## 2. Configure
 
@@ -21,7 +21,7 @@ export DATABASE_URL="mysql://user:pass@localhost:3306/app"
 ## 3. Validate
 
 ```bash
-npx @mcpfy/cli doctor --config ./mcpfy.config.ts
+npx @mcpolyglot/cli doctor --config ./mcpolyglot.config.ts
 ```
 
 You should see `✓ mysql.main: connected` and the list of generated tools.
@@ -44,9 +44,9 @@ Then ask: _"List the tables and sample 5 rows from the largest one."_
 
 ## How read-only is enforced
 
-mcpfy's MySQL dialect refuses anything that isn't a read, even before MySQL sees it:
+mcpolyglot's MySQL dialect refuses anything that isn't a read, even before MySQL sees it:
 
 1. **AST gate** — the SQL is parsed with `node-sql-parser` (mysql grammar). Top-level statement type must be `select` / `show` / `describe` / `explain` / `with`. Anything else (`UPDATE`, `INSERT`, `DROP`, multi-statement injections) is rejected.
 2. **`SET SESSION TRANSACTION READ ONLY` + `START TRANSACTION`** — server-side belt for the AST-gate suspenders.
 3. **`MAX_EXECUTION_TIME` hint** is injected into the SELECT so MySQL itself cancels long queries (in addition to the client-side `AbortController`).
-4. Results are passed through redaction (emails / JWTs / SSNs / etc.) and wrapped in an `<mcpfy-data>` "untrusted-data" block before reaching the model.
+4. Results are passed through redaction (emails / JWTs / SSNs / etc.) and wrapped in an `<mcpolyglot-data>` "untrusted-data" block before reaching the model.

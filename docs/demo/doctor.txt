@@ -1,11 +1,11 @@
-$ mcpfy doctor --config ./mcpfy.config.json
+$ mcpolyglot doctor --config ./mcpolyglot.config.json
 
-  ▲  mcpfy  v0.0.1
+  ▲  mcpolyglot  v0.0.1
      doctor — validate config and connectivity
 
 
   Config
-  ✓ parsed  ./mcpfy.config.json
+  ✓ parsed  ./mcpolyglot.config.json
 
   Sources
   ✓ sqlite.demo  sql · 2 ms
@@ -15,5 +15,5 @@ $ mcpfy doctor --config ./mcpfy.config.json
       • sqlite.demo.query  [tables:read, query:raw]
 
   Summary
-  ✓ all systems go  mcpfy is ready to serve
-  run: mcpfy serve
+  ✓ all systems go  mcpolyglot is ready to serve
+  run: mcpolyglot serve

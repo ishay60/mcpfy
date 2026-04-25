@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/testkit",
+  "name": "@mcpolyglot/testkit",
   "version": "0.0.1",
-  "description": "MCP conformance harness and test fixtures for mcpfy connectors. Drives stdio servers like a real MCP client.",
+  "description": "MCP conformance harness and test fixtures for mcpolyglot connectors. Drives stdio servers like a real MCP client.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

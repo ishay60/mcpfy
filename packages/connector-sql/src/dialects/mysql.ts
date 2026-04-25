@@ -1,6 +1,6 @@
 import sqlParser from 'node-sql-parser';
-import type { ColumnSchema, TableSchema } from '@mcpfy/core';
-import { McpfyError } from '@mcpfy/core';
+import type { ColumnSchema, TableSchema } from '@mcpolyglot/core';
+import { McpolyglotError } from '@mcpolyglot/core';
 import type { SqlDialect, SqlQueryResult } from '../dialect.js';
 
 const { Parser } = sqlParser;
@@ -130,13 +130,16 @@ export class MysqlDialect implements SqlDialect {
     try {
       asts = this.parser.astify(sql, { database: 'mysql' });
     } catch (err) {
-      throw new McpfyError('forbidden.read_only', `Could not parse SQL: ${(err as Error).message}`);
+      throw new McpolyglotError(
+        'forbidden.read_only',
+        `Could not parse SQL: ${(err as Error).message}`,
+      );
     }
     const list = Array.isArray(asts) ? asts : [asts];
     for (const node of list) {
       const type = ((node as { type?: string })?.type ?? '').toLowerCase();
       if (!READ_OPS.has(type)) {
-        throw new McpfyError(
+        throw new McpolyglotError(
           'forbidden.read_only',
           `Statement is not read-only (got "${type || 'unknown'}")`,
         );
@@ -154,7 +157,8 @@ export class MysqlDialect implements SqlDialect {
   }
 
   private requirePool(): MysqlPool {
-    if (!this.pool) throw new McpfyError('connector.not_initialized', 'MysqlDialect not connected');
+    if (!this.pool)
+      throw new McpolyglotError('connector.not_initialized', 'MysqlDialect not connected');
     return this.pool;
   }
 }
@@ -163,7 +167,7 @@ async function loadMysql(): Promise<typeof import('mysql2/promise')> {
   try {
     return await import('mysql2/promise');
   } catch {
-    throw new McpfyError(
+    throw new McpolyglotError(
       'connector.missing_dep',
       'The "mysql2" package is required for the mysql dialect. Install it with: pnpm add mysql2',
     );

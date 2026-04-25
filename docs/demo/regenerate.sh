@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Regenerate the captured CLI outputs in this directory.
 #
-# These are real captures of `mcpfy <command>` against a local sample SQLite
+# These are real captures of `mcpolyglot <command>` against a local sample SQLite
 # database — used by the README and ARCHITECTURE.md as the "screenshot"
 # replacement that survives renaming, link-rot, and grayscale terminals.
 #
@@ -19,8 +19,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 CLI="$ROOT/packages/cli/dist/bin.js"
 DEMO_DIR="$ROOT/docs/demo"
-DB="$(mktemp -t mcpfy-demo.XXXXXX.db)"
-CFG="$(mktemp -t mcpfy-demo.XXXXXX.json)"
+DB="$(mktemp -t mcpolyglot-demo.XXXXXX.db)"
+CFG="$(mktemp -t mcpolyglot-demo.XXXXXX.json)"
 
 trap 'rm -f "$DB" "$CFG"' EXIT
 
@@ -57,7 +57,7 @@ SQL
 # Config (JSON so there's no module-resolution dance for the demo)
 cat > "$CFG" <<JSON
 {
-  "server": { "name": "mcpfy", "version": "0.0.1" },
+  "server": { "name": "mcpolyglot", "version": "0.0.1" },
   "transport": { "kind": "stdio" },
   "sources": [
     {
@@ -70,7 +70,7 @@ cat > "$CFG" <<JSON
       "redact": { "columns": ["users.password_hash"], "patterns": [] }
     }
   ],
-  "audit": { "path": "~/.mcpfy/audit.log" },
+  "audit": { "path": "~/.mcpolyglot/audit.log" },
   "rateLimit": { "defaultPerMinute": 30, "maxConcurrent": 5 },
   "security": { "wrapMode": "strict" }
 }
@@ -83,16 +83,16 @@ run() {
   NO_COLOR=1 eval "$3" >> "$DEMO_DIR/$1.txt" 2>&1 || true
 }
 
-run help    "mcpfy --help" \
+run help    "mcpolyglot --help" \
             "node \"$CLI\" --help"
-run doctor  "mcpfy doctor --config ./mcpfy.config.json" \
+run doctor  "mcpolyglot doctor --config ./mcpolyglot.config.json" \
             "node \"$CLI\" doctor --config \"$CFG\""
-run tools   "mcpfy tools --config ./mcpfy.config.json" \
+run tools   "mcpolyglot tools --config ./mcpolyglot.config.json" \
             "node \"$CLI\" tools --config \"$CFG\""
 
 echo "regenerating serve-http.txt"
 {
-  echo "\$ mcpfy serve --http --port 7339 --config ./mcpfy.config.json"
+  echo "\$ mcpolyglot serve --http --port 7339 --config ./mcpolyglot.config.json"
   echo ""
 } > "$DEMO_DIR/serve-http.txt"
 NO_COLOR=1 node "$CLI" serve --http --port 7339 --config "$CFG" >> "$DEMO_DIR/serve-http.txt" 2>&1 &

@@ -1,7 +1,7 @@
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js';
 
 /**
- * Carries an `McpfyServer`'s JSON-RPC traffic. Two implementations ship today —
+ * Carries an `McpolyglotServer`'s JSON-RPC traffic. Two implementations ship today —
  * `StdioTransport` (Claude Desktop / Cursor / Claude Code) and
  * `StreamableHttpTransport` (long-lived HTTP service with bearer auth).
  */

@@ -1,11 +1,11 @@
 {
-  "name": "@mcpfy/cli",
+  "name": "@mcpolyglot/cli",
   "version": "0.0.1",
-  "description": "mcpfy command-line interface. Initializes config, serves the MCP server (stdio or HTTP), and validates connectivity.",
+  "description": "mcpolyglot command-line interface. Initializes config, serves the MCP server (stdio or HTTP), and validates connectivity.",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "mcpfy": "./dist/bin.js"
+    "mcpolyglot": "./dist/bin.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
-    "@mcpfy/config": "workspace:^",
-    "@mcpfy/connector-mongo": "workspace:^",
-    "@mcpfy/connector-sql": "workspace:^",
-    "@mcpfy/core": "workspace:^",
-    "@mcpfy/security": "workspace:^",
+    "@mcpolyglot/config": "workspace:^",
+    "@mcpolyglot/connector-mongo": "workspace:^",
+    "@mcpolyglot/connector-sql": "workspace:^",
+    "@mcpolyglot/core": "workspace:^",
+    "@mcpolyglot/security": "workspace:^",
     "commander": "^12.1.0",
     "picocolors": "^1.1.0",
     "tsx": "^4.19.1"

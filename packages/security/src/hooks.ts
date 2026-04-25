@@ -1,4 +1,4 @@
-import type { Scope, ToolResult, SecurityHooks } from '@mcpfy/core';
+import type { Scope, ToolResult, SecurityHooks } from '@mcpolyglot/core';
 import { ScopeGuard } from './scope-guard.js';
 import { Redactor, type RedactionRule, type ColumnDenyEntry } from './redactor.js';
 import { RateLimiter, type RateLimitOptions } from './rate-limiter.js';
@@ -17,12 +17,12 @@ export interface DefaultHookOptions {
 
 /**
  * Construct the standard set of `SecurityHooks` — scope guard, rate limiter, redactor,
- * audit logger, and the untrusted-data wrapper. Pass the result to `McpfyServer`'s
+ * audit logger, and the untrusted-data wrapper. Pass the result to `McpolyglotServer`'s
  * `security.hooks`.
  *
  * @example
  * ```ts
- * import { defaultSecurityHooks } from '@mcpfy/security';
+ * import { defaultSecurityHooks } from '@mcpolyglot/security';
  *
  * const hooks = defaultSecurityHooks({
  *   rateLimit: { defaultPerMinute: 60, maxConcurrent: 8 },

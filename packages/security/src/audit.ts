@@ -11,7 +11,7 @@ export class AuditLogger {
   private dirEnsured = false;
 
   constructor(opts: AuditLoggerOptions = {}) {
-    this.path = expandHome(opts.path ?? '~/.mcpfy/audit.log');
+    this.path = expandHome(opts.path ?? '~/.mcpolyglot/audit.log');
   }
 
   async append(entry: Record<string, unknown>): Promise<void> {

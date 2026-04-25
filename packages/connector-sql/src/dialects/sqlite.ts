@@ -1,5 +1,5 @@
-import type { TableSchema, ColumnSchema } from '@mcpfy/core';
-import { McpfyError } from '@mcpfy/core';
+import type { TableSchema, ColumnSchema } from '@mcpolyglot/core';
+import { McpolyglotError } from '@mcpolyglot/core';
 import type { SqlDialect, SqlQueryResult } from '../dialect.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,17 +69,17 @@ export class SqliteDialect implements SqlDialect {
     opts: { rowCap: number; timeoutMs: number; signal?: AbortSignal },
   ): Promise<SqlQueryResult> {
     const db = this.requireDb();
-    if (opts.signal?.aborted) throw new McpfyError('aborted', 'Aborted before execution');
+    if (opts.signal?.aborted) throw new McpolyglotError('aborted', 'Aborted before execution');
 
     // SQLite is synchronous via better-sqlite3 — `query_only` pragma + readonly handle blocks writes.
     const stmt = db.prepare(sql);
     if (!stmt.reader) {
-      throw new McpfyError('forbidden.read_only', 'Statement is not read-only');
+      throw new McpolyglotError('forbidden.read_only', 'Statement is not read-only');
     }
     const startedAt = Date.now();
     const all = stmt.all(...(params as unknown[])) as Array<Record<string, unknown>>;
     if (Date.now() - startedAt > opts.timeoutMs) {
-      throw new McpfyError('timeout', `Query exceeded ${opts.timeoutMs}ms`);
+      throw new McpolyglotError('timeout', `Query exceeded ${opts.timeoutMs}ms`);
     }
     const truncated = all.length > opts.rowCap;
     const rows = truncated ? all.slice(0, opts.rowCap) : all;
@@ -90,7 +90,8 @@ export class SqliteDialect implements SqlDialect {
   }
 
   private requireDb(): BetterSqlite3Database {
-    if (!this.db) throw new McpfyError('connector.not_initialized', 'SqliteDialect not connected');
+    if (!this.db)
+      throw new McpolyglotError('connector.not_initialized', 'SqliteDialect not connected');
     return this.db;
   }
 
@@ -113,7 +114,7 @@ async function loadSqlite(): Promise<any> {
     };
     return mod.default ?? mod;
   } catch {
-    throw new McpfyError(
+    throw new McpolyglotError(
       'connector.missing_dep',
       'The "better-sqlite3" package is required for the sqlite dialect. Install it with: pnpm add better-sqlite3',
     );

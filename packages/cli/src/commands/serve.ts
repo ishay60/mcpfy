@@ -2,9 +2,9 @@ import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { extname, basename } from 'node:path';
 import pc from 'picocolors';
-import { loadConfig } from '@mcpfy/config';
-import { StdioTransport } from '@mcpfy/core/transports/stdio';
-import { StreamableHttpTransport } from '@mcpfy/core/transports/streamable-http';
+import { loadConfig } from '@mcpolyglot/config';
+import { StdioTransport } from '@mcpolyglot/core/transports/stdio';
+import { StreamableHttpTransport } from '@mcpolyglot/core/transports/streamable-http';
 import { buildServerFromConfig } from '../factory.js';
 import { banner, section, kv, ready, hint, sym, link } from '../ui.js';
 
@@ -71,7 +71,7 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
   await server.start(transport);
 
   ready(Date.now() - startedAt);
-  hint('Press Ctrl+C to stop. Audit log: ~/.mcpfy/audit.log');
+  hint('Press Ctrl+C to stop. Audit log: ~/.mcpolyglot/audit.log');
 
   const shutdown = async () => {
     process.stderr.write(pc.dim('\n  shutting down…\n'));

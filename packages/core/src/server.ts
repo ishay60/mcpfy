@@ -12,14 +12,14 @@ import {
   type ToolResult,
   DEFAULT_SCOPES,
 } from './tool.js';
-import { McpfyError, ScopeError, TimeoutError } from './errors.js';
+import { McpolyglotError, ScopeError, TimeoutError } from './errors.js';
 
 /**
  * The non-bypassable pipeline that wraps every tool call. Implementations live in
- * `@mcpfy/security`; consumers usually get one via `defaultSecurityHooks()` and don't
+ * `@mcpolyglot/security`; consumers usually get one via `defaultSecurityHooks()` and don't
  * implement this directly.
  *
- * Every method here corresponds to a numbered phase in `McpfyServer.executeTool`.
+ * Every method here corresponds to a numbered phase in `McpolyglotServer.executeTool`.
  */
 export interface SecurityHooks {
   /** Phase 1 — reject if granted scopes don't cover the tool's required scopes. */
@@ -36,7 +36,7 @@ export interface SecurityHooks {
   audit(entry: AuditEntry): Promise<void>;
 }
 
-/** Bundle of security primitives `McpfyServer` needs. Built by `defaultSecurityHooks()`. */
+/** Bundle of security primitives `McpolyglotServer` needs. Built by `defaultSecurityHooks()`. */
 export interface SecurityServices {
   hooks: SecurityHooks;
   defaultLimits: ToolExecLimits;
@@ -62,8 +62,8 @@ export interface AuditEntry {
   error?: { code: string; message: string };
 }
 
-/** Constructor options for `McpfyServer`. */
-export interface McpfyServerOptions {
+/** Constructor options for `McpolyglotServer`. */
+export interface McpolyglotServerOptions {
   name?: string;
   version?: string;
   connectors: Connector[];
@@ -89,11 +89,11 @@ export interface McpfyServerOptions {
  *
  * @example
  * ```ts
- * import { McpfyServer } from '@mcpfy/core';
- * import { StdioTransport } from '@mcpfy/core/transports/stdio';
- * import { defaultSecurityHooks } from '@mcpfy/security';
+ * import { McpolyglotServer } from '@mcpolyglot/core';
+ * import { StdioTransport } from '@mcpolyglot/core/transports/stdio';
+ * import { defaultSecurityHooks } from '@mcpolyglot/security';
  *
- * const server = new McpfyServer({
+ * const server = new McpolyglotServer({
  *   connectors: [myConnector],
  *   security: {
  *     hooks: defaultSecurityHooks(),
@@ -104,7 +104,7 @@ export interface McpfyServerOptions {
  * await server.start(new StdioTransport());
  * ```
  */
-export class McpfyServer {
+export class McpolyglotServer {
   private readonly server: Server;
   private readonly tools = new Map<string, ToolDefinition>();
   private readonly connectors: Connector[];
@@ -112,10 +112,10 @@ export class McpfyServer {
   private readonly scopes: Set<Scope>;
   private readonly security: SecurityServices;
   private readonly sessionId = randomUUID();
-  private readonly logger: NonNullable<McpfyServerOptions['logger']>;
+  private readonly logger: NonNullable<McpolyglotServerOptions['logger']>;
   private transport?: Transport;
 
-  constructor(opts: McpfyServerOptions) {
+  constructor(opts: McpolyglotServerOptions) {
     this.connectors = opts.connectors;
     this.perEntity = opts.perEntity ?? {};
     this.scopes = new Set(opts.scopes ?? DEFAULT_SCOPES);
@@ -123,7 +123,7 @@ export class McpfyServer {
     this.logger = opts.logger ?? makeNoopLogger();
 
     this.server = new Server(
-      { name: opts.name ?? 'mcpfy', version: opts.version ?? '0.0.1' },
+      { name: opts.name ?? 'mcpolyglot', version: opts.version ?? '0.0.1' },
       { capabilities: { tools: {} } },
     );
 
@@ -141,7 +141,7 @@ export class McpfyServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (req) => {
       const def = this.tools.get(req.params.name);
       if (!def) {
-        throw new McpfyError('tool.not_found', `Unknown tool: ${req.params.name}`);
+        throw new McpolyglotError('tool.not_found', `Unknown tool: ${req.params.name}`);
       }
       const internal = await this.executeTool(def, req.params.arguments ?? {});
       return toMcpResult(internal);
@@ -163,7 +163,7 @@ export class McpfyServer {
     }
     this.transport = transport;
     await transport.start(this.server);
-    this.logger.info('mcpfy.started', {
+    this.logger.info('mcpolyglot.started', {
       sessionId: this.sessionId,
       transport: transport.kind,
       tools: this.tools.size,
@@ -180,7 +180,7 @@ export class McpfyServer {
 
   private registerTool(tool: ToolDefinition): void {
     if (this.tools.has(tool.name)) {
-      throw new McpfyError('tool.duplicate', `Duplicate tool name: ${tool.name}`);
+      throw new McpolyglotError('tool.duplicate', `Duplicate tool name: ${tool.name}`);
     }
     this.tools.set(tool.name, tool);
   }
@@ -281,7 +281,7 @@ function hashArgs(args: unknown): string {
     .slice(0, 16);
 }
 
-/** Translate mcpfy's internal ToolResult into the MCP CallToolResult shape. */
+/** Translate mcpolyglot's internal ToolResult into the MCP CallToolResult shape. */
 function toMcpResult(r: ToolResult): {
   content: Array<{ type: 'text'; text: string }>;
   isError?: boolean;
@@ -295,7 +295,7 @@ function toMcpResult(r: ToolResult): {
   };
 }
 
-function makeNoopLogger(): NonNullable<McpfyServerOptions['logger']> {
+function makeNoopLogger(): NonNullable<McpolyglotServerOptions['logger']> {
   return {
     debug: () => {},
     info: () => {},
