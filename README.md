@@ -37,6 +37,21 @@ The official `@modelcontextprotocol/server-postgres` is archived and unmaintaine
 
 mcpfy is that story. One config, one CLI, every database your agent needs.
 
+### How it compares
+
+|                               | mcpfy                                                                           | `server-postgres` (archived) | Vendor MCPs (Supabase / Neon / …) | DIY MCP server       |
+| ----------------------------- | ------------------------------------------------------------------------------- | ---------------------------- | --------------------------------- | -------------------- |
+| **Databases supported**       | Postgres, SQLite, MySQL, Mongo                                                  | Postgres only                | One vendor's hosted DB            | Whatever you wire up |
+| **Read-only enforcement**     | At the DB layer (per dialect) **and** at the application layer (scopes)         | DB-layer only                | Varies by vendor                  | You write it         |
+| **Built-in PII redaction**    | Yes — emails, JWTs, AWS keys, GH tokens, SSNs, CC#s, plus per-column deny lists | No                           | Varies                            | You write it         |
+| **Audit log**                 | Yes — JSONL, no raw args / results                                              | No                           | Varies                            | You write it         |
+| **Prompt-injection wrapping** | Yes — every result wrapped in `<mcpfy-data>`                                    | No                           | Varies                            | You write it         |
+| **Transports**                | stdio + Streamable HTTP (bearer auth, `/healthz`)                               | stdio only                   | Varies                            | You write it         |
+| **Status**                    | Wave 2 alpha, actively maintained                                               | Archived                     | Vendor-supported                  | Yours to own         |
+| **Lock-in**                   | None — your DB, your config                                                     | None                         | Vendor's DB                       | None                 |
+
+Vendor MCPs are great if you've already committed to that vendor's stack. mcpfy is the option when you want one consistent surface across the databases you actually have.
+
 ## Quickstart
 
 ```bash
