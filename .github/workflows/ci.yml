@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+env:
+  # pnpm/action-setup@v4 still ships with Node 20; opt into Node 24
+  # so GitHub stops emitting deprecation warnings on every job.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   build:
     name: Build & test (${{ matrix.os }} / Node ${{ matrix.node }})
