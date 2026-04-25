@@ -8,15 +8,28 @@
 [![Node](https://img.shields.io/badge/node-%E2%89%A520-339933)](.nvmrc)
 
 ```text
-  ▲  mcpfy  v0.0.1
-     one config, every database your agent needs
+$ mcpfy doctor --config ./mcpfy.config.json
 
-Commands:
-  init      Interactively scaffold an mcpfy.config.ts
-  serve     Start the mcpfy MCP server (stdio or HTTP)
-  doctor    Validate config, ping sources, list tools
-  tools     List all tools mcpfy would expose
+  ▲  mcpfy  v0.0.1
+     doctor — validate config and connectivity
+
+
+  Config
+  ✓ parsed  ./mcpfy.config.json
+
+  Sources
+  ✓ sqlite.demo  sql · 2 ms
+  • tools  3 registered
+      • sqlite.demo.list_tables  [schema:read]
+      • sqlite.demo.describe_table  [schema:read]
+      • sqlite.demo.query  [tables:read, query:raw]
+
+  Summary
+  ✓ all systems go  mcpfy is ready to serve
+  run: mcpfy serve
 ```
+
+More captured outputs (`--help`, `tools`, `serve --http`) and a regenerate script live under [`docs/demo/`](./docs/demo).
 
 ## Why
 
