@@ -1,0 +1,4 @@
+# Default reviewer for everything in the repo. CODEOWNERS uses globs, not
+# branch protection — combined with the "protected-trunks" ruleset, every PR
+# into main / develop will request a review from @ishay60 automatically.
+*  @ishay60
