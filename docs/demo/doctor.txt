@@ -1,0 +1,19 @@
+$ mcpfy doctor --config ./mcpfy.config.json
+
+  ▲  mcpfy  v0.0.1
+     doctor — validate config and connectivity
+
+
+  Config
+  ✓ parsed  ./mcpfy.config.json
+
+  Sources
+  ✓ sqlite.demo  sql · 2 ms
+  • tools  3 registered
+      • sqlite.demo.list_tables  [schema:read]
+      • sqlite.demo.describe_table  [schema:read]
+      • sqlite.demo.query  [tables:read, query:raw]
+
+  Summary
+  ✓ all systems go  mcpfy is ready to serve
+  run: mcpfy serve

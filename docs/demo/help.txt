@@ -1,0 +1,24 @@
+$ mcpfy --help
+
+  ▲  mcpfy  v0.0.1
+     one config, every database your agent needs
+
+Usage: mcpfy [options] [command]
+
+Turn your databases and APIs into Model Context Protocol servers.
+
+Options:
+  -V, --version     output the version
+  -h, --help        display help
+
+Commands:
+  init [options]    Interactively scaffold an mcpfy.config.ts in the current
+                    directory.
+  serve [options]   Start the mcpfy MCP server.
+  doctor [options]  Validate config, resolve secrets, ping each source, and
+                    list generated tools.
+  tools [options]   List all tools that mcpfy would expose for the current
+                    config.
+  help [command]    display help for command
+
+  docs: github.com/ishay60/mcpfy
