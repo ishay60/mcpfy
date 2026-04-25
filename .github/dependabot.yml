@@ -1,0 +1,55 @@
+# Dependabot config — keeps deps fresh without burying you in PRs.
+#
+# Strategy:
+#   - One ecosystem per package-ecosystem block.
+#   - Group all non-major bumps into a single weekly PR per ecosystem so
+#     review fatigue stays low.
+#   - Major bumps still arrive as individual PRs since they need real review.
+#   - Both ecosystems target develop (the default branch and protected trunk).
+#
+# To turn this off temporarily, set `open-pull-requests-limit: 0` for the
+# relevant block — it's less destructive than deleting the file.
+
+version: 2
+updates:
+  # JavaScript / TypeScript dependencies across the workspace.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Etc/UTC'
+    target-branch: 'develop'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'javascript'
+    commit-message:
+      prefix: 'deps'
+      include: 'scope'
+    groups:
+      minor-and-patch:
+        applies-to: 'version-updates'
+        update-types: ['minor', 'patch']
+
+  # GitHub Actions versions used by .github/workflows/*.yml.
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Etc/UTC'
+    target-branch: 'develop'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
+    groups:
+      actions-minor-and-patch:
+        applies-to: 'version-updates'
+        update-types: ['minor', 'patch']
