@@ -1,4 +1,4 @@
-import type { ToolResult } from '@mcpfy/core';
+import type { ToolResult } from '@mcpolyglot/core';
 
 export interface RedactionRule {
   name: string;

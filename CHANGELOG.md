@@ -21,21 +21,21 @@ How releases work in this repo:
 The current `develop` includes the work captured in
 [`.changeset/wave-2-multi-db-and-http.md`](./.changeset/wave-2-multi-db-and-http.md):
 
-- `@mcpfy/connector-sql` — MySQL/MariaDB dialect with AST-gated read-only enforcement.
-- `@mcpfy/connector-mongo` — new package; sample-based schema inference; `find` / `aggregate` only.
-- `@mcpfy/core` — `StreamableHttpTransport` with bearer auth, `/healthz`, and a non-loopback warning.
-- `@mcpfy/cli` — `mcpfy serve --http` flag and HTTP banner.
-- `@mcpfy/config` — MySQL/MariaDB and Mongo source kinds wired through to real connectors.
+- `@mcpolyglot/connector-sql` — MySQL/MariaDB dialect with AST-gated read-only enforcement.
+- `@mcpolyglot/connector-mongo` — new package; sample-based schema inference; `find` / `aggregate` only.
+- `@mcpolyglot/core` — `StreamableHttpTransport` with bearer auth, `/healthz`, and a non-loopback warning.
+- `@mcpolyglot/cli` — `mcpolyglot serve --http` flag and HTTP banner.
+- `@mcpolyglot/config` — MySQL/MariaDB and Mongo source kinds wired through to real connectors.
 
 ### Wave 1 — Foundation (alpha)
 
-- `@mcpfy/core` — server, registry, transports, `Connector` interface, and the
+- `@mcpolyglot/core` — server, registry, transports, `Connector` interface, and the
   non-bypassable security pipeline (scope → rate-limit → handler → redact →
   size-cap → wrap → audit).
-- `@mcpfy/security` — built-in redaction, audit logger, rate limiter, scope guard,
+- `@mcpolyglot/security` — built-in redaction, audit logger, rate limiter, scope guard,
   untrusted-data wrapper.
-- `@mcpfy/config` — Zod schema, secret resolvers (`${env:…}`, `${file:…}`,
+- `@mcpolyglot/config` — Zod schema, secret resolvers (`${env:…}`, `${file:…}`,
   `${keychain:…}`), literal-credential rejection.
-- `@mcpfy/connector-sql` — Postgres + SQLite dialects.
-- `@mcpfy/cli` — `init`, `doctor`, `tools`, `serve` over stdio.
-- `@mcpfy/testkit` — MCP conformance harness.
+- `@mcpolyglot/connector-sql` — Postgres + SQLite dialects.
+- `@mcpolyglot/cli` — `init`, `doctor`, `tools`, `serve` over stdio.
+- `@mcpolyglot/testkit` — MCP conformance harness.

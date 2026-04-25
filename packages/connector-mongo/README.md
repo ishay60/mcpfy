@@ -1,10 +1,10 @@
-# @mcpfy/connector-mongo
+# @mcpolyglot/connector-mongo
 
-MongoDB connector for [mcpfy](https://github.com/ishay60/mcpfy). Sample-based schema inference, read-only `find` / `aggregate` primitives, prompt-injection-safe results.
+MongoDB connector for [mcpolyglot](https://github.com/ishay60/mcpolyglot). Sample-based schema inference, read-only `find` / `aggregate` primitives, prompt-injection-safe results.
 
 ## Tools exposed
 
-For every Mongo source mcpfy generates:
+For every Mongo source mcpolyglot generates:
 
 - `<id>.list_collections` — all collections with a sampled-field schema for each.
 - `<id>.describe_collection` — one collection's sampled-field schema (paths, types, nullability).
@@ -13,7 +13,7 @@ For every Mongo source mcpfy generates:
 
 ## How read-only is enforced
 
-Mongo doesn't have a one-shot "read-only transaction" knob, so mcpfy enforces it at the API surface:
+Mongo doesn't have a one-shot "read-only transaction" knob, so mcpolyglot enforces it at the API surface:
 
 1. Only `find` and `aggregate` are exposed — no `update`, `insert`, `delete`, or `drop` primitives.
 2. Aggregation pipelines are walked **before** they reach the driver. Any stage with `$out` or `$merge` (the two stages that write back) is rejected with `forbidden.read_only`.
@@ -26,7 +26,7 @@ Mongo doesn't have a one-shot "read-only transaction" knob, so mcpfy enforces it
 
 ## Docs
 
-- Architecture → https://github.com/ishay60/mcpfy/blob/develop/ARCHITECTURE.md
-- Example → [examples/mongo](https://github.com/ishay60/mcpfy/tree/develop/examples/mongo)
+- Architecture → https://github.com/ishay60/mcpolyglot/blob/develop/ARCHITECTURE.md
+- Example → [examples/mongo](https://github.com/ishay60/mcpolyglot/tree/develop/examples/mongo)
 
 MIT licensed.

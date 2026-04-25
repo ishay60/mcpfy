@@ -1,13 +1,13 @@
 {
   "mcpServers": {
-    "mcpfy": {
+    "mcpolyglot": {
       "command": "npx",
       "args": [
         "-y",
-        "@mcpfy/cli",
+        "@mcpolyglot/cli",
         "serve",
         "--config",
-        "/abs/path/to/examples/mongo/mcpfy.config.ts"
+        "/abs/path/to/examples/mongo/mcpolyglot.config.ts"
       ],
       "env": {
         "MONGO_URL": "mongodb://localhost:27017/app"

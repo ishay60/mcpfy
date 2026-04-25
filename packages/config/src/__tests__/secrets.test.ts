@@ -7,18 +7,18 @@ describe('resolveSecrets', () => {
   });
 
   it('resolves ${env:NAME} from process.env', async () => {
-    process.env.MCPFY_TEST_VAR = 'hunter2';
+    process.env.MCPOLYGLOT_TEST_VAR = 'hunter2';
     try {
-      const out = await resolveSecrets('prefix-${env:MCPFY_TEST_VAR}-suffix');
+      const out = await resolveSecrets('prefix-${env:MCPOLYGLOT_TEST_VAR}-suffix');
       expect(out).toBe('prefix-hunter2-suffix');
     } finally {
-      delete process.env.MCPFY_TEST_VAR;
+      delete process.env.MCPOLYGLOT_TEST_VAR;
     }
   });
 
   it('throws when an env ref is unset', async () => {
-    delete process.env.MCPFY_DEFINITELY_UNSET;
-    await expect(resolveSecrets('${env:MCPFY_DEFINITELY_UNSET}')).rejects.toThrow(/not set/);
+    delete process.env.MCPOLYGLOT_DEFINITELY_UNSET;
+    await expect(resolveSecrets('${env:MCPOLYGLOT_DEFINITELY_UNSET}')).rejects.toThrow(/not set/);
   });
 });
 

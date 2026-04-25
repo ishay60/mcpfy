@@ -32,11 +32,21 @@ export const sym = {
 /**
  * Vite/Astro-style banner: triangle, duotone wordmark, version chip, tagline.
  *
- *   ▲ mcpfy v0.0.1
+ *   ▲ mcpolyglot v0.0.1
  *     turn your databases into MCP servers
  */
 export function banner(opts: { version: string; tagline?: string }, sink: Sink = stderrSink): void {
-  const wordmark = pc.cyan('m') + pc.cyan('c') + pc.cyan('p') + pc.magenta('f') + pc.magenta('y');
+  const wordmark =
+    pc.cyan('m') +
+    pc.cyan('c') +
+    pc.cyan('p') +
+    pc.magenta('o') +
+    pc.magenta('l') +
+    pc.magenta('y') +
+    pc.magenta('g') +
+    pc.magenta('l') +
+    pc.magenta('o') +
+    pc.magenta('t');
   const triangle = pc.cyan('▲');
   const ver = pc.dim(`v${opts.version}`);
   sink('');

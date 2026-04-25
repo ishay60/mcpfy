@@ -1,4 +1,4 @@
-import type { TableSchema } from '@mcpfy/core';
+import type { TableSchema } from '@mcpolyglot/core';
 
 export interface SqlQueryResult {
   columns: string[];

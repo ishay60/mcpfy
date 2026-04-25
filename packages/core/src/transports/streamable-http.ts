@@ -103,7 +103,7 @@ export class StreamableHttpTransport implements Transport {
 
     if (!this.checkAuth(req)) {
       res.statusCode = 401;
-      res.setHeader('WWW-Authenticate', 'Bearer realm="mcpfy"');
+      res.setHeader('WWW-Authenticate', 'Bearer realm="mcpolyglot"');
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ error: 'unauthorized' }));
       return;

@@ -1,13 +1,13 @@
 {
   "mcpServers": {
-    "mcpfy": {
+    "mcpolyglot": {
       "command": "npx",
       "args": [
         "-y",
-        "@mcpfy/cli",
+        "@mcpolyglot/cli",
         "serve",
         "--config",
-        "/abs/path/to/examples/postgres/mcpfy.config.ts"
+        "/abs/path/to/examples/postgres/mcpolyglot.config.ts"
       ],
       "env": {
         "DATABASE_URL": "postgres://user:pass@localhost:5432/mydb"

@@ -6,8 +6,8 @@ import type {
   SchemaSnapshot,
   TableSchema,
   ToolDefinition,
-} from '@mcpfy/core';
-import { McpfyError } from '@mcpfy/core';
+} from '@mcpolyglot/core';
+import { McpolyglotError } from '@mcpolyglot/core';
 import type { SqlDialect } from './dialect.js';
 
 export type SqlDialectKind = SqlDialect['kind'];
@@ -87,7 +87,7 @@ export class SqlConnector implements Connector {
               t.name.toLowerCase() === name.toLowerCase(),
           );
           if (!found) {
-            throw new McpfyError('not_found', `Table "${name}" not found in ${id}`);
+            throw new McpolyglotError('not_found', `Table "${name}" not found in ${id}`);
           }
           return { content: [{ type: 'json', data: found }] };
         },

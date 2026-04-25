@@ -1,5 +1,5 @@
-import type { TableSchema } from '@mcpfy/core';
-import { McpfyError } from '@mcpfy/core';
+import type { TableSchema } from '@mcpolyglot/core';
+import { McpolyglotError } from '@mcpolyglot/core';
 import type { SqlDialect, SqlQueryResult } from '../dialect.js';
 
 export class PostgresDialect implements SqlDialect {
@@ -14,7 +14,7 @@ export class PostgresDialect implements SqlDialect {
       connectionString: this.connectionString,
       max: 4,
       idleTimeoutMillis: 30_000,
-      application_name: 'mcpfy',
+      application_name: 'mcpolyglot',
     });
     // probe
     const c = await this.pool.connect();
@@ -126,7 +126,7 @@ export class PostgresDialect implements SqlDialect {
 
   private requirePool(): import('pg').Pool {
     if (!this.pool)
-      throw new McpfyError('connector.not_initialized', 'PostgresDialect not connected');
+      throw new McpolyglotError('connector.not_initialized', 'PostgresDialect not connected');
     return this.pool;
   }
 }
@@ -135,7 +135,7 @@ async function loadPg(): Promise<typeof import('pg')> {
   try {
     return await import('pg');
   } catch {
-    throw new McpfyError(
+    throw new McpolyglotError(
       'connector.missing_dep',
       'The "pg" package is required for the postgres dialect. Install it with: pnpm add pg',
     );

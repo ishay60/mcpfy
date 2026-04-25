@@ -1,23 +1,33 @@
-import { McpfyServer, type Connector, type SecurityHooks, ConfigError } from '@mcpfy/core';
 import {
-  type McpfyConfig,
+  McpolyglotServer,
+  type Connector,
+  type SecurityHooks,
+  ConfigError,
+} from '@mcpolyglot/core';
+import {
+  type McpolyglotConfig,
   type SourceConfig,
   type SqlSourceConfig,
   resolveSecrets,
-} from '@mcpfy/config';
-import { defaultSecurityHooks } from '@mcpfy/security';
-import { MysqlDialect, PostgresDialect, SqlConnector, SqliteDialect } from '@mcpfy/connector-sql';
-import { MongoConnector } from '@mcpfy/connector-mongo';
+} from '@mcpolyglot/config';
+import { defaultSecurityHooks } from '@mcpolyglot/security';
+import {
+  MysqlDialect,
+  PostgresDialect,
+  SqlConnector,
+  SqliteDialect,
+} from '@mcpolyglot/connector-sql';
+import { MongoConnector } from '@mcpolyglot/connector-mongo';
 
 export interface BuiltServer {
-  server: McpfyServer;
+  server: McpolyglotServer;
   hooks: SecurityHooks;
   connectors: Connector[];
   perEntity: Record<string, { enabled: boolean; include?: string[]; exclude?: string[] }>;
 }
 
 export async function buildServerFromConfig(
-  cfg: McpfyConfig,
+  cfg: McpolyglotConfig,
   logger = makeStderrLogger(),
 ): Promise<BuiltServer> {
   const connectors: Connector[] = [];
@@ -61,7 +71,7 @@ export async function buildServerFromConfig(
       }
     : { rowCap: 200, timeoutMs: 10_000, maxBytes: 256 * 1024 };
 
-  const server = new McpfyServer({
+  const server = new McpolyglotServer({
     name: cfg.server.name,
     version: cfg.server.version,
     connectors,
@@ -112,7 +122,7 @@ function getLimits(src: SourceConfig): { rowCap: number; timeoutMs: number; maxB
 }
 
 function collectScopes(sources: SourceConfig[]) {
-  const set = new Set<import('@mcpfy/core').Scope>();
+  const set = new Set<import('@mcpolyglot/core').Scope>();
   for (const s of sources) for (const sc of s.scopes) set.add(sc);
   return Array.from(set);
 }

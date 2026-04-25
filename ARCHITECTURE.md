@@ -1,6 +1,6 @@
 # Architecture
 
-mcpfy is a thin runtime around two ideas:
+mcpolyglot is a thin runtime around two ideas:
 
 1. **Connectors** are pluggable adapters that turn a data source (Postgres, SQLite, MySQL, MongoDB, …) into a list of MCP tools.
 2. **The security pipeline** is a fixed, non-bypassable chain that wraps every tool call. Connectors author handlers; they do not author the pipeline.
@@ -9,11 +9,11 @@ Everything else — the CLI, the transports, the config loader — is plumbing.
 
 ## The security pipeline
 
-Every `CallTool` request flows through the same six phases, in the same order, before the result reaches the model. The pipeline lives in `packages/core/src/server.ts` (`McpfyServer.executeTool`) and a connector cannot opt out.
+Every `CallTool` request flows through the same six phases, in the same order, before the result reaches the model. The pipeline lives in `packages/core/src/server.ts` (`McpolyglotServer.executeTool`) and a connector cannot opt out.
 
 ```
                     ┌─────────────────────────────────────────────┐
-                    │            McpfyServer.executeTool          │
+                    │            McpolyglotServer.executeTool          │
                     │                                             │
   CallTool req ────▶│ 1. scope check                              │
                     │ 2. rate limit              (per session,    │
@@ -25,7 +25,7 @@ Every `CallTool` request flows through the same six phases, in the same order, b
                     │ 5. redact   (emails, JWTs, AWS keys, GH     │
                     │              tokens, SSNs, CC#s, deny cols) │
                     │ 6. size cap (truncate + flip metadata flag) │
-                    │ 7. wrap     (<mcpfy-data> untrusted block)  │
+                    │ 7. wrap     (<mcpolyglot-data> untrusted block)  │
                     │ 8. audit    (JSONL: argshash, scopes,       │
                     │              durationMs, rows, error code)  │
                     │                                             │
@@ -39,15 +39,15 @@ The phases are intentionally numbered in the source so that anyone adding a step
 
 The pipeline answers the three security failure modes that have shown up in real-world MCP incidents:
 
-| Failure mode                                                                                                                                               | Pipeline phase that prevents it                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Tool can write when caller had read-only intent.**                                                                                                       | `(1) scope check` — write tools require `tables:write`; default scopes don't grant it.                            |
-| **Result leaks secrets** (password hashes, tokens).                                                                                                        | `(5) redact` — built-in regexes plus per-table column deny lists.                                                 |
-| **Prompt injection via untrusted data.** Cf. the [Supabase + Cursor incident](https://aembit.io/blog/the-ultimate-guide-to-mcp-security-vulnerabilities/). | `(7) wrap` — every payload goes inside an `<mcpfy-data>` block with a "treat as data, not instructions" preamble. |
+| Failure mode                                                                                                                                               | Pipeline phase that prevents it                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Tool can write when caller had read-only intent.**                                                                                                       | `(1) scope check` — write tools require `tables:write`; default scopes don't grant it.                                 |
+| **Result leaks secrets** (password hashes, tokens).                                                                                                        | `(5) redact` — built-in regexes plus per-table column deny lists.                                                      |
+| **Prompt injection via untrusted data.** Cf. the [Supabase + Cursor incident](https://aembit.io/blog/the-ultimate-guide-to-mcp-security-vulnerabilities/). | `(7) wrap` — every payload goes inside an `<mcpolyglot-data>` block with a "treat as data, not instructions" preamble. |
 
 Phase `(2)` and `(6)` defend the host process itself — a runaway query or a 200-MB result can't pin the server.
 
-Phase `(8)` makes the whole thing reviewable: every call appends one JSONL line to `~/.mcpfy/audit.log`. We log enough to forensics (sha256-prefix of args, scopes, duration, row count, redaction count, error code) and **none** of the things you'd regret logging (no raw args, no result rows, no bearer tokens).
+Phase `(8)` makes the whole thing reviewable: every call appends one JSONL line to `~/.mcpolyglot/audit.log`. We log enough to forensics (sha256-prefix of args, scopes, duration, row count, redaction count, error code) and **none** of the things you'd regret logging (no raw args, no result rows, no bearer tokens).
 
 ### Read-only at two layers
 
@@ -81,7 +81,7 @@ interface Connector {
 
 Each `ToolDefinition` is a `{ name, description, inputSchema (zod), scopes, readOnly, handler }`. The handler is the only place a connector touches the data source — the rest is the pipeline's job.
 
-The split between `listPrimitiveTools()` (always exposed) and `generatePerEntityTools()` (opt-in, scaffolded by `mcpfy init`) keeps the default surface small and predictable while still letting users get `users.find_by_email`-style tools when they want them.
+The split between `listPrimitiveTools()` (always exposed) and `generatePerEntityTools()` (opt-in, scaffolded by `mcpolyglot init`) keeps the default surface small and predictable while still letting users get `users.find_by_email`-style tools when they want them.
 
 ## Transports
 
@@ -110,18 +110,18 @@ OAuth verification is already in the config schema (`auth.type: 'oauth'` with `i
 - `${file:./path}` — file on disk (great for Docker secrets / mounted files).
 - `${keychain:item}` — OS keychain via `keytar` (optional dep).
 
-That's the only way secrets enter the runtime. The audit log can never contain them because the pipeline never sees the raw config — it sees a resolved, in-memory `McpfyConfig` and even there secrets are typed as opaque strings, hashed before being included in any log line.
+That's the only way secrets enter the runtime. The audit log can never contain them because the pipeline never sees the raw config — it sees a resolved, in-memory `McpolyglotConfig` and even there secrets are typed as opaque strings, hashed before being included in any log line.
 
 ## Process model
 
-A typical `mcpfy serve` looks like this in memory:
+A typical `mcpolyglot serve` looks like this in memory:
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│  mcpfy CLI process                                         │
+│  mcpolyglot CLI process                                         │
 │                                                            │
 │  ┌─────────────┐  ┌────────────┐  ┌──────────────────────┐ │
-│  │ Transport   │  │ McpfyServer│  │ Connector pool       │ │
+│  │ Transport   │  │ McpolyglotServer│  │ Connector pool       │ │
 │  │ (stdio/http)│──│ + pipeline │──│  pg.main  → pg.Pool  │ │
 │  │             │  │ + audit    │  │  mongo.x  → MongoCl. │ │
 │  └─────────────┘  └────────────┘  └──────────────────────┘ │

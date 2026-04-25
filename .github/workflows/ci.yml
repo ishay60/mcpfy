@@ -50,4 +50,4 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
-# integration job is enabled in Wave 2 once testcontainers fixtures land in @mcpfy/testkit.
+# integration job is enabled in Wave 2 once testcontainers fixtures land in @mcpolyglot/testkit.

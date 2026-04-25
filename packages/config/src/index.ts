@@ -1,7 +1,7 @@
 export {
   defineConfig,
   loadConfig,
-  type McpfyConfig,
+  type McpolyglotConfig,
   type SourceConfig,
   type SqlSourceConfig,
   type MongoSourceConfig,

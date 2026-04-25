@@ -1,12 +1,12 @@
-# @mcpfy/core
+# @mcpolyglot/core
 
-The runtime that powers [mcpfy](https://github.com/ishay60/mcpfy). Defines the `Connector` interface, the `McpfyServer`, the transport abstraction, and the non-bypassable security pipeline that wraps every tool call.
+The runtime that powers [mcpolyglot](https://github.com/ishay60/mcpolyglot). Defines the `Connector` interface, the `McpolyglotServer`, the transport abstraction, and the non-bypassable security pipeline that wraps every tool call.
 
-You usually don't depend on this directly — install [`@mcpfy/cli`](https://www.npmjs.com/package/@mcpfy/cli) instead. Use this package when you want to embed mcpfy in your own host or write a custom connector.
+You usually don't depend on this directly — install [`@mcpolyglot/cli`](https://www.npmjs.com/package/@mcpolyglot/cli) instead. Use this package when you want to embed mcpolyglot in your own host or write a custom connector.
 
 ## What's in here
 
-- **`McpfyServer`** — wires connectors, security hooks, and a transport into an MCP-compliant server. Every tool call goes through the same pipeline:
+- **`McpolyglotServer`** — wires connectors, security hooks, and a transport into an MCP-compliant server. Every tool call goes through the same pipeline:
   ```
   scope check → rate limit → timeout → handler → redact → size cap → wrap → audit
   ```
@@ -18,14 +18,14 @@ You usually don't depend on this directly — install [`@mcpfy/cli`](https://www
 ## Subpath exports
 
 ```ts
-import { McpfyServer } from '@mcpfy/core';
-import { StdioTransport } from '@mcpfy/core/transports/stdio';
-import { StreamableHttpTransport } from '@mcpfy/core/transports/streamable-http';
+import { McpolyglotServer } from '@mcpolyglot/core';
+import { StdioTransport } from '@mcpolyglot/core/transports/stdio';
+import { StreamableHttpTransport } from '@mcpolyglot/core/transports/streamable-http';
 ```
 
 ## Docs
 
-- Architecture → https://github.com/ishay60/mcpfy/blob/develop/ARCHITECTURE.md
+- Architecture → https://github.com/ishay60/mcpolyglot/blob/develop/ARCHITECTURE.md
 - Pipeline source → [`src/server.ts`](./src/server.ts) (`executeTool`)
 
 MIT licensed.

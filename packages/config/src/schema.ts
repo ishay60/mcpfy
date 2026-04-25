@@ -3,7 +3,7 @@ import { extname, isAbsolute, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
-import { ConfigError } from '@mcpfy/core';
+import { ConfigError } from '@mcpolyglot/core';
 
 const ScopeSchema = z.enum([
   'schema:read',
@@ -113,15 +113,15 @@ const TransportSchema = z.union([
 export const ConfigSchema = z.object({
   server: z
     .object({
-      name: z.string().default('mcpfy'),
+      name: z.string().default('mcpolyglot'),
       version: z.string().default('0.0.1'),
     })
-    .default({ name: 'mcpfy', version: '0.0.1' }),
+    .default({ name: 'mcpolyglot', version: '0.0.1' }),
   transport: TransportSchema.default({ kind: 'stdio' }),
   sources: z.array(z.union([SqlSourceSchema, MongoSourceSchema, OpenApiSourceSchema])).min(1),
   audit: z
-    .object({ path: z.string().default('~/.mcpfy/audit.log') })
-    .default({ path: '~/.mcpfy/audit.log' }),
+    .object({ path: z.string().default('~/.mcpolyglot/audit.log') })
+    .default({ path: '~/.mcpolyglot/audit.log' }),
   rateLimit: z
     .object({
       defaultPerMinute: z.number().int().positive().default(30),
@@ -135,7 +135,7 @@ export const ConfigSchema = z.object({
     .default({ wrapMode: 'strict' }),
 });
 
-export type McpfyConfig = z.infer<typeof ConfigSchema>;
+export type McpolyglotConfig = z.infer<typeof ConfigSchema>;
 export type SqlSourceConfig = z.infer<typeof SqlSourceSchema>;
 export type MongoSourceConfig = z.infer<typeof MongoSourceSchema>;
 export type OpenApiSourceConfig = z.infer<typeof OpenApiSourceSchema>;
@@ -143,12 +143,12 @@ export type SourceConfig = SqlSourceConfig | MongoSourceConfig | OpenApiSourceCo
 export type TransportConfig = z.infer<typeof TransportSchema>;
 
 /**
- * Identity helper for type-safe `mcpfy.config.ts` files. Wraps the config so editors
+ * Identity helper for type-safe `mcpolyglot.config.ts` files. Wraps the config so editors
  * give you autocomplete and Zod's validation runs at load time rather than crashing later.
  *
  * @example
  * ```ts
- * import { defineConfig } from '@mcpfy/config';
+ * import { defineConfig } from '@mcpolyglot/config';
  *
  * export default defineConfig({
  *   transport: { kind: 'stdio' },
@@ -164,7 +164,7 @@ export type TransportConfig = z.infer<typeof TransportSchema>;
  * });
  * ```
  */
-export function defineConfig(cfg: McpfyConfig | (() => McpfyConfig)): McpfyConfig {
+export function defineConfig(cfg: McpolyglotConfig | (() => McpolyglotConfig)): McpolyglotConfig {
   return typeof cfg === 'function' ? cfg() : cfg;
 }
 
@@ -175,7 +175,7 @@ export function defineConfig(cfg: McpfyConfig | (() => McpfyConfig)): McpfyConfi
  * @throws {ConfigError} when the file is missing, has an unsupported extension,
  *   or fails Zod validation.
  */
-export async function loadConfig(path: string): Promise<McpfyConfig> {
+export async function loadConfig(path: string): Promise<McpolyglotConfig> {
   const abs = isAbsolute(path) ? path : resolve(process.cwd(), path);
   if (!existsSync(abs)) {
     throw new ConfigError(`Config file not found: ${abs}`);

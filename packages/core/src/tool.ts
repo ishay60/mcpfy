@@ -1,6 +1,6 @@
 import type { ZodTypeAny, infer as ZodInfer } from 'zod';
 
-/** Every scope mcpfy understands. New scopes must be added here so the Zod config schema accepts them. */
+/** Every scope mcpolyglot understands. New scopes must be added here so the Zod config schema accepts them. */
 export const ALL_SCOPES = [
   'schema:read',
   'tables:read',

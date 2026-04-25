@@ -1,4 +1,4 @@
-# Contributing to mcpfy
+# Contributing to mcpolyglot
 
 Thanks for considering a contribution.
 
@@ -19,17 +19,17 @@ This is a pnpm + Turborepo monorepo. Each package under `packages/` is published
 
 - TypeScript strict mode, ESM only.
 - Public types live in each package's `src/index.ts`.
-- The security pipeline in `@mcpfy/core/server.ts` is non-bypassable. Connectors must not perform their own auth, redaction, audit, or rate-limit logic.
+- The security pipeline in `@mcpolyglot/core/server.ts` is non-bypassable. Connectors must not perform their own auth, redaction, audit, or rate-limit logic.
 - Tests use [vitest](https://vitest.dev). Integration tests use [testcontainers](https://node.testcontainers.org) and only run on Ubuntu CI.
 - Conventional commits.
 
 ## Adding a connector
 
 1. Create `packages/connector-<kind>/` mirroring `packages/connector-sql/`.
-2. Implement `Connector` from `@mcpfy/core`.
+2. Implement `Connector` from `@mcpolyglot/core`.
 3. Expose `listPrimitiveTools()` only — leave per-entity generation for a follow-up.
 4. Use the supplied `ToolExecCtx.signal` for cancellation.
-5. Never read secrets directly — accept them as already-resolved strings; the `@mcpfy/cli` factory resolves `${env:...}` etc.
+5. Never read secrets directly — accept them as already-resolved strings; the `@mcpolyglot/cli` factory resolves `${env:...}` etc.
 
 ## Filing security issues
 

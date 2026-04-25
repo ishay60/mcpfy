@@ -11,7 +11,7 @@ name: Release
 #      registry. Provenance is enabled per-package via publishConfig.
 #
 # Required repo secret: NPM_TOKEN — an npm Automation token with publish
-# scope on the @mcpfy org. The workflow no-ops cleanly until that's set.
+# scope on the @mcpolyglot org. The workflow no-ops cleanly until that's set.
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     # Skip if the push is the version-bump commit itself — the publish step
     # only needs to run on the *follow-up* push after the PR merges.
-    if: github.repository == 'ishay60/mcpfy'
+    if: github.repository == 'ishay60/mcpolyglot'
     steps:
       - uses: actions/checkout@v5
         with:

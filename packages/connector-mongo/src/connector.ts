@@ -6,8 +6,8 @@ import type {
   PerEntityConfig,
   SchemaSnapshot,
   ToolDefinition,
-} from '@mcpfy/core';
-import { McpfyError } from '@mcpfy/core';
+} from '@mcpolyglot/core';
+import { McpolyglotError } from '@mcpolyglot/core';
 
 type MongoClient = import('mongodb').MongoClient;
 type Db = import('mongodb').Db;
@@ -43,7 +43,7 @@ export class MongoConnector implements Connector {
       serverSelectionTimeoutMS: 5_000,
       connectTimeoutMS: 5_000,
       maxPoolSize: 4,
-      appName: 'mcpfy',
+      appName: 'mcpolyglot',
     });
     await this.client.connect();
     const dbName = this.explicitDb ?? extractDbFromUri(this.url) ?? 'admin';
@@ -104,7 +104,8 @@ export class MongoConnector implements Connector {
         handler: async ({ name }) => {
           const cols = await this.cachedOrFetchCollections();
           const found = cols.find((c) => c.name.toLowerCase() === name.toLowerCase());
-          if (!found) throw new McpfyError('not_found', `Collection "${name}" not found in ${id}`);
+          if (!found)
+            throw new McpolyglotError('not_found', `Collection "${name}" not found in ${id}`);
           return { content: [{ type: 'json', data: found }] };
         },
       },
@@ -155,7 +156,7 @@ export class MongoConnector implements Connector {
           for (const stage of pipeline) {
             for (const op of Object.keys(stage)) {
               if (op === '$out' || op === '$merge') {
-                throw new McpfyError(
+                throw new McpolyglotError(
                   'forbidden.read_only',
                   `Aggregation stage "${op}" mutates data and is not allowed`,
                 );
@@ -205,7 +206,8 @@ export class MongoConnector implements Connector {
   }
 
   private requireDb(): Db {
-    if (!this.db) throw new McpfyError('connector.not_initialized', 'MongoConnector not connected');
+    if (!this.db)
+      throw new McpolyglotError('connector.not_initialized', 'MongoConnector not connected');
     return this.db;
   }
 }
@@ -250,7 +252,7 @@ async function loadMongo(): Promise<typeof import('mongodb')> {
   try {
     return await import('mongodb');
   } catch {
-    throw new McpfyError(
+    throw new McpolyglotError(
       'connector.missing_dep',
       'The "mongodb" package is required for the mongo connector. Install it with: pnpm add mongodb',
     );

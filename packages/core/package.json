@@ -1,7 +1,7 @@
 {
-  "name": "@mcpfy/core",
+  "name": "@mcpolyglot/core",
   "version": "0.0.1",
-  "description": "Core runtime for mcpfy: Connector interface, server, transports, and the non-bypassable security pipeline.",
+  "description": "Core runtime for mcpolyglot: Connector interface, server, transports, and the non-bypassable security pipeline.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

@@ -6,19 +6,19 @@ labels: bug
 
 ## What happened
 
-(Steps to reproduce. Include the relevant `mcpfy.config.ts` excerpt with secrets redacted.)
+(Steps to reproduce. Include the relevant `mcpolyglot.config.ts` excerpt with secrets redacted.)
 
 ## What you expected
 
 ## Environment
 
-- mcpfy CLI version: `npx @mcpfy/cli --version`
+- mcpolyglot CLI version: `npx @mcpolyglot/cli --version`
 - Node version: `node --version`
 - OS:
 - Connector(s):
 - MCP host (Claude Desktop / Cursor / Claude Code / other):
 
-## `mcpfy doctor` output
+## `mcpolyglot doctor` output
 
 ```
 (paste here)

@@ -1,5 +1,5 @@
 import pc from 'picocolors';
-import { loadConfig, looksLikeLiteralCredential } from '@mcpfy/config';
+import { loadConfig, looksLikeLiteralCredential } from '@mcpolyglot/config';
 import { buildServerFromConfig } from '../factory.js';
 import { banner, section, ok, err, warn, bullet, hint, stdoutSink, sym } from '../ui.js';
 
@@ -67,11 +67,11 @@ export async function doctorCommand(opts: DoctorOptions): Promise<boolean> {
 
   section('Summary', stdoutSink);
   if (allOk) {
-    ok('all systems go', 'mcpfy is ready to serve', stdoutSink);
+    ok('all systems go', 'mcpolyglot is ready to serve', stdoutSink);
   } else {
     err('one or more checks failed', 'see errors above', stdoutSink);
   }
-  hint('run: mcpfy serve', stdoutSink);
+  hint('run: mcpolyglot serve', stdoutSink);
   process.stdout.write('\n');
   return allOk;
 }

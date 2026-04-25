@@ -1,5 +1,5 @@
 import pc from 'picocolors';
-import { loadConfig } from '@mcpfy/config';
+import { loadConfig } from '@mcpolyglot/config';
 import { buildServerFromConfig } from '../factory.js';
 import { banner, section, table, hint, stdoutSink } from '../ui.js';
 
@@ -35,6 +35,6 @@ export async function toolsCommand(opts: ToolsOptions): Promise<void> {
     rows,
     stdoutSink,
   );
-  hint('add tools to a host: mcpfy serve --config ./mcpfy.config.ts', stdoutSink);
+  hint('add tools to a host: mcpolyglot serve --config ./mcpolyglot.config.ts', stdoutSink);
   process.stdout.write('\n');
 }
