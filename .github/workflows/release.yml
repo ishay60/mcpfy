@@ -32,9 +32,6 @@ jobs:
   release:
     name: Version & publish
     runs-on: ubuntu-latest
-    # Skip if the push is the version-bump commit itself — the publish step
-    # only needs to run on the *follow-up* push after the PR merges.
-    if: github.repository == 'ishay60/mcpolyglot'
     steps:
       - uses: actions/checkout@v6
         with:
