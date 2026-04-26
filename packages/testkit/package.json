@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "description": "MCP conformance harness and test fixtures for mcpolyglot connectors. Drives stdio servers like a real MCP client.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/testkit"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

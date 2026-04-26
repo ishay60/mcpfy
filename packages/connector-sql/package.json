@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Shared SQL connector for mcpolyglot with Postgres, MySQL/MariaDB, and SQLite dialects. Read-only-by-default with per-dialect enforcement.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/connector-sql"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

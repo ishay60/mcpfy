@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Core runtime for mcpolyglot: Connector interface, server, transports, and the non-bypassable security pipeline.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/core"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

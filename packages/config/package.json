@@ -3,6 +3,11 @@
   "version": "0.0.2",
   "description": "Config schema and loader for mcpolyglot. Validates user config and resolves secrets via env / file / OS keychain refs.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/config"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
