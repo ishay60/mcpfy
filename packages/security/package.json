@@ -3,6 +3,11 @@
   "version": "0.0.2",
   "description": "Non-bypassable security middleware for mcpolyglot: scopes, redaction, audit, rate-limit, and untrusted-data wrapping.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/security"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

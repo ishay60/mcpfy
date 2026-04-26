@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "MongoDB connector for mcpolyglot. Sample-based schema inference, read-only find / aggregate primitives, prompt-injection-safe results.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishay60/mcpolyglot.git",
+    "directory": "packages/connector-mongo"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
