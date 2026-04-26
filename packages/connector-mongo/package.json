@@ -27,7 +27,7 @@
     "zod": "^3.23.8"
   },
   "optionalDependencies": {
-    "mongodb": "^6.10.0"
+    "mongodb": "^7.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
