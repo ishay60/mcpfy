@@ -1,6 +1,6 @@
 {
   "name": "@mcpolyglot/connector-mongo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "MongoDB connector for mcpolyglot. Sample-based schema inference, read-only find / aggregate primitives, prompt-injection-safe results.",
   "license": "MIT",
   "type": "module",
