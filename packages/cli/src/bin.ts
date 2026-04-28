@@ -20,7 +20,8 @@ function bannerHeader(): string {
     pc.magenta('l') +
     pc.magenta('o') +
     pc.magenta('t');
-  return `\n  ${pc.cyan('▲')}  ${pc.bold(wordmark)}  ${pc.dim('v' + VERSION)}\n     ${pc.dim('one config, every database your agent needs')}\n`;
+  const tag = pc.bgCyan(pc.black(pc.bold(' MCP ')));
+  return `\n  ${pc.cyan('▲')}  ${pc.bold(wordmark)}  ${tag}  ${pc.dim('v' + VERSION)}\n     ${pc.dim('one config, every database your agent needs')}\n`;
 }
 
 const program = new Command();

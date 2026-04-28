@@ -6,7 +6,7 @@ import { loadConfig } from '@mcpolyglot/config';
 import { StdioTransport } from '@mcpolyglot/core/transports/stdio';
 import { StreamableHttpTransport } from '@mcpolyglot/core/transports/streamable-http';
 import { buildServerFromConfig } from '../factory.js';
-import { banner, section, kv, ready, hint, sym, link } from '../ui.js';
+import { headerBar, section, kv, ready, footerBar, sym, link } from '../ui.js';
 
 export interface ServeOptions {
   config: string;
@@ -26,7 +26,11 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
     }
   }
 
-  banner({ version: '0.0.1', tagline: 'one config, every database your agent needs' });
+  headerBar({
+    version: '0.0.1',
+    command: 'serve',
+    subtitle: 'one config, every database your agent needs',
+  });
 
   const cfg = await loadConfig(opts.config);
   const { server, connectors } = await buildServerFromConfig(cfg);
@@ -71,7 +75,7 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
   await server.start(transport);
 
   ready(Date.now() - startedAt);
-  hint('Press Ctrl+C to stop. Audit log: ~/.mcpolyglot/audit.log');
+  footerBar(['Ctrl+C to stop', 'audit: ~/.mcpolyglot/audit.log']);
 
   const shutdown = async () => {
     process.stderr.write(pc.dim('\n  shutting down…\n'));

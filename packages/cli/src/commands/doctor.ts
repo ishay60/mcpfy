@@ -1,7 +1,18 @@
 import pc from 'picocolors';
 import { loadConfig, looksLikeLiteralCredential } from '@mcpolyglot/config';
 import { buildServerFromConfig } from '../factory.js';
-import { banner, section, ok, err, warn, bullet, hint, stdoutSink, sym } from '../ui.js';
+import {
+  headerBar,
+  section,
+  ok,
+  err,
+  warn,
+  bullet,
+  footerBar,
+  stdoutSink,
+  sym,
+  chip,
+} from '../ui.js';
 
 export interface DoctorOptions {
   config: string;
@@ -10,7 +21,14 @@ export interface DoctorOptions {
 export async function doctorCommand(opts: DoctorOptions): Promise<boolean> {
   let allOk = true;
 
-  banner({ version: '0.0.1', tagline: 'doctor — validate config and connectivity' }, stdoutSink);
+  headerBar(
+    {
+      version: '0.0.1',
+      command: 'doctor',
+      subtitle: 'validate config, resolve secrets, ping each source',
+    },
+    stdoutSink,
+  );
 
   let cfg;
   try {
@@ -67,11 +85,13 @@ export async function doctorCommand(opts: DoctorOptions): Promise<boolean> {
 
   section('Summary', stdoutSink);
   if (allOk) {
-    ok('all systems go', 'mcpolyglot is ready to serve', stdoutSink);
+    stdoutSink(`  ${chip('READY', 'ready')}  mcpolyglot is ready to serve`);
   } else {
     err('one or more checks failed', 'see errors above', stdoutSink);
   }
-  hint('run: mcpolyglot serve', stdoutSink);
-  process.stdout.write('\n');
+  footerBar(
+    [`run: ${pc.cyan('mcpolyglot serve')}`, `docs: ${pc.cyan('github.com/ishay60/mcpolyglot')}`],
+    stdoutSink,
+  );
   return allOk;
 }

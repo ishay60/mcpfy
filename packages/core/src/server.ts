@@ -1,7 +1,7 @@
 import { randomUUID, createHash } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { z } from 'zod';
 import type { Connector, PerEntityConfig } from './connector.js';
 import type { Transport } from './transport.js';
 import {
@@ -131,7 +131,7 @@ export class McpolyglotServer {
       tools: Array.from(this.tools.values()).map((t) => ({
         name: t.name,
         description: t.description,
-        inputSchema: zodToJsonSchema(t.inputSchema, { target: 'jsonSchema7' }) as Record<
+        inputSchema: z.toJSONSchema(t.inputSchema, { target: 'draft-7' }) as Record<
           string,
           unknown
         >,
