@@ -1,14 +1,17 @@
 import pc from 'picocolors';
 import { loadConfig } from '@mcpolyglot/config';
 import { buildServerFromConfig } from '../factory.js';
-import { banner, section, table, hint, stdoutSink } from '../ui.js';
+import { headerBar, section, table, footerBar, stdoutSink } from '../ui.js';
 
 export interface ToolsOptions {
   config: string;
 }
 
 export async function toolsCommand(opts: ToolsOptions): Promise<void> {
-  banner({ version: '0.0.1', tagline: 'tools — preview generated MCP tools' }, stdoutSink);
+  headerBar(
+    { version: '0.0.1', command: 'tools', subtitle: 'preview generated MCP tools' },
+    stdoutSink,
+  );
 
   const cfg = await loadConfig(opts.config);
   const { connectors } = await buildServerFromConfig(cfg);
@@ -35,6 +38,11 @@ export async function toolsCommand(opts: ToolsOptions): Promise<void> {
     rows,
     stdoutSink,
   );
-  hint('add tools to a host: mcpolyglot serve --config ./mcpolyglot.config.ts', stdoutSink);
-  process.stdout.write('\n');
+  footerBar(
+    [
+      `serve: ${pc.cyan('mcpolyglot serve --config ' + opts.config)}`,
+      `docs: ${pc.cyan('github.com/ishay60/mcpolyglot')}`,
+    ],
+    stdoutSink,
+  );
 }

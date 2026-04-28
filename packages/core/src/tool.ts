@@ -1,4 +1,14 @@
-import type { ZodTypeAny, infer as ZodInfer } from 'zod';
+import type { z } from 'zod';
+
+/**
+ * Loose Zod schema type used as the default bound on `ToolDefinition` /
+ * `ToolHandler`. We deliberately type the output as `any` so a connector
+ * defining `inputSchema: z.object({ name: z.string() })` can write
+ * `handler: ({ name }) => ...` without an explicit generic — the destructure
+ * remains permissive while runtime parsing still enforces the schema.
+ */
+export type AnyZodSchema = z.ZodType<any>;
+export type ZodInfer<S extends AnyZodSchema> = z.infer<S>;
 
 /** Every scope mcpolyglot understands. New scopes must be added here so the Zod config schema accepts them. */
 export const ALL_SCOPES = [
@@ -69,7 +79,7 @@ export interface ToolExecCtx {
  * Handler signature for a tool. Args are pre-validated against `ToolDefinition.inputSchema`,
  * so the function receives a parsed, typed value — no defensive validation needed.
  */
-export type ToolHandler<S extends ZodTypeAny = ZodTypeAny> = (
+export type ToolHandler<S extends AnyZodSchema = AnyZodSchema> = (
   args: ZodInfer<S>,
   ctx: ToolExecCtx,
 ) => Promise<ToolResult>;
@@ -93,7 +103,7 @@ export type ToolHandler<S extends ZodTypeAny = ZodTypeAny> = (
  * };
  * ```
  */
-export interface ToolDefinition<S extends ZodTypeAny = ZodTypeAny> {
+export interface ToolDefinition<S extends AnyZodSchema = AnyZodSchema> {
   /** Globally-unique tool name. By convention: `<connector.id>.<verb>`. */
   name: string;
   /** Human-readable description shown to the model in `tools/list`. */
