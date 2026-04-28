@@ -2,11 +2,14 @@ import { register } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { extname, basename } from 'node:path';
 import pc from 'picocolors';
-import { loadConfig } from '@mcpolyglot/config';
+import { loadConfig, type McpolyglotConfig } from '@mcpolyglot/config';
 import { StdioTransport } from '@mcpolyglot/core/transports/stdio';
 import { StreamableHttpTransport } from '@mcpolyglot/core/transports/streamable-http';
 import { buildServerFromConfig } from '../factory.js';
 import { headerBar, section, kv, ready, footerBar, sym, link } from '../ui.js';
+
+type HttpTransportConfig = Extract<McpolyglotConfig['transport'], { kind: 'http' }>;
+type HttpAuthConfig = HttpTransportConfig['auth'];
 
 export interface ServeOptions {
   config: string;
@@ -48,23 +51,34 @@ export async function serveCommand(opts: ServeOptions): Promise<void> {
   const wantHttp = opts.http || cfg.transport.kind === 'http';
   const httpHost = cfg.transport.kind === 'http' && !opts.http ? cfg.transport.host : opts.host;
   const httpPort = cfg.transport.kind === 'http' && !opts.http ? cfg.transport.port : opts.port;
-  const configuredToken =
-    cfg.transport.kind === 'http' && cfg.transport.auth.type === 'bearer'
-      ? cfg.transport.auth.token
-      : undefined;
+  const httpAuth: HttpAuthConfig =
+    cfg.transport.kind === 'http' ? cfg.transport.auth : { type: 'bearer' };
 
   let transport: StdioTransport | StreamableHttpTransport;
   if (wantHttp) {
     const httpTransport = new StreamableHttpTransport({
       host: httpHost,
       port: httpPort,
-      ...(configuredToken ? { bearerToken: configuredToken } : {}),
+      auth:
+        httpAuth.type === 'oauth'
+          ? {
+              kind: 'oauth',
+              issuer: httpAuth.issuer,
+              audience: httpAuth.audience,
+              ...(httpAuth.jwksUri ? { jwksUri: httpAuth.jwksUri } : {}),
+            }
+          : { kind: 'bearer', ...(httpAuth.token ? { token: httpAuth.token } : {}) },
     });
     transport = httpTransport;
     kv('Mode', pc.cyan('streamable-http'));
     kv('URL', link(`http://${httpHost}:${httpPort}/mcp`));
     kv('Health', link(`http://${httpHost}:${httpPort}/healthz`));
-    kv('Token', pc.yellow(httpTransport.bearerToken));
+    if (httpTransport.authKind === 'oauth' && httpAuth.type === 'oauth') {
+      kv('Auth', pc.cyan(`oauth · ${httpAuth.issuer}`));
+      kv('Audience', pc.dim(httpAuth.audience));
+    } else if (httpTransport.bearerToken) {
+      kv('Token', pc.yellow(httpTransport.bearerToken));
+    }
     kv('Config', pc.dim(basename(opts.config)));
   } else {
     transport = new StdioTransport();
