@@ -74,6 +74,43 @@ The Streamable HTTP transport is read-only-secure by default:
 
 For production, terminate TLS at a reverse proxy (Caddy, nginx, an ALB) and forward to the loopback port. Don't expose `--host 0.0.0.0` directly.
 
-## OAuth (Wave 3)
+## OAuth
 
-The config schema already accepts `auth.type: 'oauth'` with `issuer`, `audience`, and an optional `jwksUri`. The verifier middleware lands in Wave 3 alongside the OpenAPI connector.
+For deployments behind an OIDC provider (Auth0, Okta, Keycloak, AWS Cognito, …), swap the `auth` block in `mcpolyglot.config.ts`:
+
+```ts
+transport: {
+  kind: 'http',
+  host: '127.0.0.1',
+  port: 7337,
+  auth: {
+    type: 'oauth',
+    issuer: 'https://your-tenant.auth0.com/',
+    audience: 'https://api.mcpolyglot.example',
+    // Optional — defaults to `${issuer}/.well-known/jwks.json`.
+    // jwksUri: 'https://your-tenant.auth0.com/.well-known/jwks.json',
+  },
+},
+```
+
+Clients then send a real JWT on the `Authorization` header instead of a static secret. Verification enforces:
+
+- signature against a JWKS-resolved key (cached + rotated by `jose`),
+- `iss` exact-match against the configured `issuer`,
+- `aud` exact-match against the configured `audience`,
+- `exp` / `nbf` within a 30-second clock skew.
+
+Failures return `401` with `WWW-Authenticate: Bearer realm="mcpolyglot", error="invalid_token", error_description="<reason>"` where `<reason>` is one of `token_expired`, `signature_invalid`, `claim_validation_failed`, `unknown_key`, or `invalid_token`.
+
+```bash
+TOKEN="$(curl -s -X POST https://your-tenant.auth0.com/oauth/token \
+  -H 'content-type: application/json' \
+  -d '{"client_id":"…","client_secret":"…","audience":"https://api.mcpolyglot.example","grant_type":"client_credentials"}' \
+  | jq -r .access_token)"
+
+curl -s http://127.0.0.1:7337/mcp \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'content-type: application/json' \
+  -H 'accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```

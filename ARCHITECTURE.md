@@ -100,7 +100,7 @@ Two implementations ship today:
 - **`StdioTransport`** — wraps the MCP SDK's stdio transport. Used for Claude Desktop, Cursor, and Claude Code. Stdio servers must keep stdout clean, so all CLI output goes to stderr.
 - **`StreamableHttpTransport`** — Node `http.createServer` with bearer auth (`timingSafeEqual`), an unauthenticated `/healthz`, structured JSON logs to stderr, and a startup warning if you bind to a non-loopback host.
 
-OAuth verification is already in the config schema (`auth.type: 'oauth'` with `issuer`, `audience`, `jwksUri`) and lands as middleware in Wave 3.
+OAuth verification is wired in via [`packages/core/src/transports/oauth.ts`](./packages/core/src/transports/oauth.ts). When `auth.type: 'oauth'` is set in the config, the transport uses `jose.createRemoteJWKSet` to resolve signing keys (defaulting to `${issuer}/.well-known/jwks.json`) and `jwtVerify` to enforce signature, `iss`, `aud`, and `exp`/`nbf` on every request. Failures return `401` with an RFC 6750 `error_description`.
 
 ## Config
 

@@ -96,7 +96,7 @@ End-to-end recipes for each connector live under [`examples/`](./examples).
 ### Transports
 
 - **stdio** — for Claude Desktop / Cursor / Claude Code. (Wave 1)
-- **Streamable HTTP** — bearer-auth, loopback by default, `/healthz` probe, JSON logs. (Wave 2)
+- **Streamable HTTP** — bearer or OAuth (JWT/JWKS), loopback by default, `/healthz` probe, JSON logs. (Wave 2 + Wave 3)
 
 ```bash
 npx @mcpolyglot/cli serve --http --port 7337
