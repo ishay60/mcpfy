@@ -13,7 +13,7 @@ Every `CallTool` request flows through the same six phases, in the same order, b
 
 ```
                     ┌─────────────────────────────────────────────┐
-                    │            McpolyglotServer.executeTool          │
+                    │            McpolyglotServer.executeTool     │
                     │                                             │
   CallTool req ────▶│ 1. scope check                              │
                     │ 2. rate limit              (per session,    │
@@ -25,7 +25,7 @@ Every `CallTool` request flows through the same six phases, in the same order, b
                     │ 5. redact   (emails, JWTs, AWS keys, GH     │
                     │              tokens, SSNs, CC#s, deny cols) │
                     │ 6. size cap (truncate + flip metadata flag) │
-                    │ 7. wrap     (<mcpolyglot-data> untrusted block)  │
+                    │ 7.wrap (<mcpolyglot-data> untrusted block)  │
                     │ 8. audit    (JSONL: argshash, scopes,       │
                     │              durationMs, rows, error code)  │
                     │                                             │
