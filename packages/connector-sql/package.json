@@ -33,13 +33,13 @@
     "zod": "^4.4.3"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^12.4.1",
-    "mysql2": "^3.22.3",
-    "pg": "^8.13.0"
+    "better-sqlite3": "^12.10.0",
+    "mysql2": "^3.22.4",
+    "pg": "^8.21.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.1",
     "@types/pg": "^8.11.10",
     "typescript": "^6.0.3",
     "vitest": "^2.1.1"
