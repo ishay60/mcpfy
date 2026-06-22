@@ -33,9 +33,9 @@
     "zod": "^4.4.3"
   },
   "optionalDependencies": {
-    "better-sqlite3": "^12.4.1",
-    "mysql2": "^3.22.3",
-    "pg": "^8.13.0"
+    "better-sqlite3": "^12.11.1",
+    "mysql2": "^3.22.5",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
